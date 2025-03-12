@@ -41,10 +41,6 @@ partial struct GoInGameServerSystem : ISystem
             entityCommandBuffer.SetComponent(playerEntity, LocalTransform.FromPosition(new float3(
                 UnityEngine.Random.Range(-10, +10), 0, 0)));
 
-            // Instantiate camera entity and set it to follow the player
-            Entity cameraEntity = entityCommandBuffer.CreateEntity();
-            entityCommandBuffer.AddComponent(cameraEntity, new CameraFollow { PlayerEntity = playerEntity });
-
             // Add GhostOwner component to connecting player that sent the connection rpc
             NetworkId networkId = SystemAPI.GetComponent<NetworkId>(receiveRpcCommandRequest.ValueRO.SourceConnection);
             entityCommandBuffer.AddComponent(playerEntity, new GhostOwner
@@ -56,6 +52,11 @@ partial struct GoInGameServerSystem : ISystem
             entityCommandBuffer.AppendToBuffer(receiveRpcCommandRequest.ValueRO.SourceConnection, new LinkedEntityGroup
             {
                 Value = playerEntity
+            });
+            Animator animator = authoring.playerPrefabGameObject.GetComponent<Animator>();
+            entityCommandBuffer.AddComponent(playerEntity, new AnimatorComponent
+            {
+                animatorEntity = animator
             });
         }
 

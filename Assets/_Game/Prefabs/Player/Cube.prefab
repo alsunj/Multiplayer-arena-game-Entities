@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: -202488746562016087}
   - component: {fileID: -6588502853141303043}
   - component: {fileID: 4663103396279588658}
+  - component: {fileID: 7308881765750536992}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -174,7 +175,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 84
   m_CollisionDetection: 0
 --- !u!114 &4663103396279588658
 MonoBehaviour:
@@ -188,3 +189,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a82f6d8766908894faabdee547539756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprintRemaining: 5
+  sprintDuration: 5
+  sprintSpeed: 12
+  walkSpeed: 9
+  sprintCooldownReset: 2
+  sprintFOV: 90
+  walkFOV: 60
+  sprintFOVStepTime: 0.1
+--- !u!114 &7308881765750536992
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2899838405596494908}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 725f443b46fd3448e9c957fb78798883, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ServerPrefab: {fileID: 0}
+  ClientPrefab: {fileID: 2376445730206303677, guid: 4e5cb8aa1739e0e4e9f39ec61f344ee2, type: 3}

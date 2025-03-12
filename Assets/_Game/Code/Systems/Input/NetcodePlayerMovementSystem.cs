@@ -15,11 +15,10 @@ partial struct NetcodePlayerMovementSystem : ISystem
         float deltaTime = SystemAPI.Time.DeltaTime;
 
         foreach ((RefRO<NetcodePlayerInput> netcodePlayerInput, RefRW<PhysicsVelocity> physicsVelocity,
-                     RefRW<LocalTransform> localTransform, RefRW<PlayerSprintData> sprintData,
-                     RefRO<CameraFollow> cameraFollow)
+                     RefRW<LocalTransform> localTransform, RefRW<PlayerSprintData> sprintData)
                  in SystemAPI
                      .Query<RefRO<NetcodePlayerInput>, RefRW<PhysicsVelocity>, RefRW<LocalTransform>,
-                         RefRW<PlayerSprintData>, RefRO<CameraFollow>>()
+                         RefRW<PlayerSprintData>>()
                      .WithAll<Simulate>())
         {
             Debug.Log("Updating player movement and camera follow");
@@ -64,21 +63,6 @@ partial struct NetcodePlayerMovementSystem : ISystem
             {
                 quaternion targetRotation = quaternion.LookRotationSafe(moveVector, math.up());
                 localTransform.ValueRW.Rotation = math.slerp(localTransform.ValueRO.Rotation, targetRotation, 0.1f);
-            }
-
-            // Update camera position and FOV
-            Entity playerEntity = cameraFollow.ValueRO.PlayerEntity;
-            if (SystemAPI.HasComponent<LocalTransform>(playerEntity))
-            {
-                LocalTransform playerTransform = SystemAPI.GetComponent<LocalTransform>(playerEntity);
-                float3 cameraPosition = playerTransform.Position + new float3(0, 2, -5);
-                SystemAPI.SetComponent(cameraFollow.ValueRO.PlayerEntity,
-                    new LocalTransform { Position = cameraPosition });
-
-                // Update camera FOV
-                Camera.main.fieldOfView = math.lerp(Camera.main.fieldOfView,
-                    sprintData.ValueRO.isSprinting ? sprintData.ValueRO.sprintFOV : sprintData.ValueRO.walkFOV,
-                    sprintData.ValueRO.sprintFOVStepTime * deltaTime);
             }
         }
     }

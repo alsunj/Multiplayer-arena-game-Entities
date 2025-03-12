@@ -12,10 +12,9 @@ public class EntitiesReferencesAuthoring : MonoBehaviour
         {
             Entity entity = GetEntity(TransformUsageFlags.Dynamic);
             Entity playerPrefabEntity = GetEntity(authoring.playerPrefabGameObject, TransformUsageFlags.Dynamic);
-
             AddComponent(entity, new EntititesReferences
             {
-                playerPrefabEntity = playerPrefabEntity
+                playerPrefabEntity = playerPrefabEntity,
             });
             AddComponent<PhysicsVelocity>(entity);
             AddComponent<PhysicsMass>(entity, PhysicsMass.CreateDynamic(MassProperties.UnitSphere, 1f));
@@ -23,6 +22,7 @@ public class EntitiesReferencesAuthoring : MonoBehaviour
         }
     }
 }
+
 
 public struct EntititesReferences : IComponentData
 {

@@ -5,6 +5,15 @@ using UnityEngine;
 
 public class NetcodePlayerInputAuthoring : MonoBehaviour
 {
+    public float sprintRemaining = 5f;
+    public float sprintDuration = 5f;
+    public float sprintSpeed = 12f;
+    public float walkSpeed = 9f;
+    public float sprintCooldownReset = 2f;
+    public float sprintFOV = 90f;
+    public float walkFOV = 60f;
+    public float sprintFOVStepTime = 0.1f;
+
     public class Baker : Baker<NetcodePlayerInputAuthoring>
     {
         public override void Bake(NetcodePlayerInputAuthoring authoring)
@@ -12,25 +21,23 @@ public class NetcodePlayerInputAuthoring : MonoBehaviour
             Entity entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent(entity, new NetcodePlayerInput());
 
-            // Assign initial values to PlayerSprintData
             AddComponent(entity, new PlayerSprintData
             {
                 isSprinting = false,
                 isSprintCooldown = false,
-                sprintRemaining = 5f,
-                sprintDuration = 5f,
-                sprintSpeed = 12f,
-                walkSpeed = 9f,
+                sprintRemaining = authoring.sprintRemaining,
+                sprintDuration = authoring.sprintDuration,
+                sprintSpeed = authoring.sprintSpeed,
+                walkSpeed = authoring.walkSpeed,
                 sprintCooldown = 0f,
-                sprintCooldownReset = 2f,
-                sprintFOV = 90f,
-                walkFOV = 60f,
-                sprintFOVStepTime = 0.1f
+                sprintCooldownReset = authoring.sprintCooldownReset,
+                sprintFOV = authoring.sprintFOV,
+                walkFOV = authoring.walkFOV,
+                sprintFOVStepTime = authoring.sprintFOVStepTime
             });
 
             AddComponent(entity, new PlayerAttackData());
             AddComponent(entity, new PlayerDefenceData());
-            AddComponent(entity, new CameraFollow());
         }
     }
 }
@@ -63,9 +70,4 @@ public struct PlayerAttackData : IComponentData
 public struct PlayerDefenceData : IComponentData
 {
     public float defenceCooldownTimer;
-}
-
-public struct CameraFollow : IComponentData
-{
-    public Entity PlayerEntity;
 }
