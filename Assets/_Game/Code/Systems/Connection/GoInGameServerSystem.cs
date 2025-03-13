@@ -53,11 +53,6 @@ partial struct GoInGameServerSystem : ISystem
             {
                 Value = playerEntity
             });
-            Animator animator = authoring.playerPrefabGameObject.GetComponent<Animator>();
-            entityCommandBuffer.AddComponent(playerEntity, new AnimatorComponent
-            {
-                animatorEntity = animator
-            });
         }
 
         entityCommandBuffer.Playback(state.EntityManager);
