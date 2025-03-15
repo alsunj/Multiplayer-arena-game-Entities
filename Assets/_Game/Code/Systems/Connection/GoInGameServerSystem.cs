@@ -37,7 +37,7 @@ partial struct GoInGameServerSystem : ISystem
 
 
             // Instantiate player entity and place randomly on the x axis -+10
-            Entity playerEntity = entityCommandBuffer.Instantiate(entititesReferences.playerPrefabEntity);
+            Entity playerEntity = entityCommandBuffer.Instantiate(entititesReferences.PlayerPrefabEntity);
             entityCommandBuffer.SetComponent(playerEntity, LocalTransform.FromPosition(new float3(
                 UnityEngine.Random.Range(-10, +10), 0, 0)));
 

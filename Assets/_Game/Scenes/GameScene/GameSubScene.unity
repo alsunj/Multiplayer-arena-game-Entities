@@ -235,6 +235,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefabGameObject: {fileID: 5874026590232167095, guid: 7ea025f0d02f62a4b8c0db52b410e781, type: 3}
+  rougeEnemyPrefabGameObject: {fileID: 6506877459714527765, guid: 529bc4d3414850f4e99b5a85b65aa1ea, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

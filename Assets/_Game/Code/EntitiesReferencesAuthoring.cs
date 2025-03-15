@@ -1,10 +1,12 @@
 using Unity.Entities;
 using Unity.Physics;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class EntitiesReferencesAuthoring : MonoBehaviour
 {
     public GameObject playerPrefabGameObject;
+    public GameObject rougeEnemyPrefabGameObject;
 
     public class Baker : Baker<EntitiesReferencesAuthoring>
     {
@@ -12,13 +14,13 @@ public class EntitiesReferencesAuthoring : MonoBehaviour
         {
             Entity entity = GetEntity(TransformUsageFlags.Dynamic);
             Entity playerPrefabEntity = GetEntity(authoring.playerPrefabGameObject, TransformUsageFlags.Dynamic);
+            Entity rougeEnemyPrefabEntity = GetEntity(authoring.rougeEnemyPrefabGameObject, TransformUsageFlags.None);
             AddComponent(entity, new EntititesReferences
             {
-                playerPrefabEntity = playerPrefabEntity,
+                PlayerPrefabEntity = playerPrefabEntity,
+                RougeEnemyPrefabEntity = rougeEnemyPrefabEntity
             });
             AddComponent<PhysicsVelocity>(entity);
-            AddComponent<PhysicsMass>(entity, PhysicsMass.CreateDynamic(MassProperties.UnitSphere, 1f));
-            AddComponent<PhysicsDamping>(entity, new PhysicsDamping { Linear = 0.01f, Angular = 0.05f });
         }
     }
 }
@@ -26,5 +28,6 @@ public class EntitiesReferencesAuthoring : MonoBehaviour
 
 public struct EntititesReferences : IComponentData
 {
-    public Entity playerPrefabEntity;
+    public Entity PlayerPrefabEntity;
+    public Entity RougeEnemyPrefabEntity;
 }

@@ -17,7 +17,6 @@ partial struct GoInGameClientSystem : ISystem
         entityQueryBuilder.Dispose();
     }
 
-    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         EntityCommandBuffer entityCommandBuffer = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
@@ -31,6 +30,13 @@ partial struct GoInGameClientSystem : ISystem
             Debug.Log("Connected!" + entity + "::" + networkId.ValueRO.Value);
 
             Entity rpcEntity = entityCommandBuffer.CreateEntity();
+            GameObject playerCameraGO = new GameObject($"Camera{networkId.ValueRO.Value}");
+            playerCameraGO.AddComponent<Camera>();
+
+            // Assign the player entity to FollowPlayer script
+            FollowPlayer followScript = playerCameraGO.AddComponent<FollowPlayer>();
+            followScript.networkId = networkId.ValueRO.Value; // Store networkId instead of dire
+
             entityCommandBuffer.AddComponent<GoInGameRequestRpc>(rpcEntity);
             entityCommandBuffer.AddComponent<SendRpcCommandRequest>(rpcEntity);
         }
