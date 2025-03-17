@@ -47,6 +47,7 @@ GameObject:
   - component: {fileID: 2660614573323502624}
   - component: {fileID: 3088076614356089153}
   - component: {fileID: 4693948394273888574}
+  - component: {fileID: 3955402020692204287}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -151,9 +152,6 @@ MonoBehaviour:
   sprintSpeed: 12
   walkSpeed: 9
   sprintCooldownReset: 2
-  sprintFOV: 90
-  walkFOV: 60
-  sprintFOVStepTime: 0.1
 --- !u!114 &3088076614356089153
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -191,6 +189,19 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
+--- !u!114 &3955402020692204287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5874026590232167095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8b4cd120b33db8143be607a7d5012817, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TeamType: 1
 --- !u!1001 &6975352639711469968
 PrefabInstance:
   m_ObjectHideFlags: 0

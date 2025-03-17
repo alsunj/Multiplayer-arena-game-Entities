@@ -19,9 +19,3 @@ public class CameraFollowAuthoring : MonoBehaviour
         }
     }
 }
-
-public struct CameraFollow : IComponentData
-{
-    public Entity PlayerEntity;
-    public float3 Offset;
-}
