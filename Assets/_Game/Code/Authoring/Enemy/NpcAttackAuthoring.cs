@@ -7,7 +7,6 @@ public class NpcAttackAuthoring : MonoBehaviour
     public float NpcTargetRadius;
     public float AttackCooldownTime;
     public Vector3 FirePointOffset;
-
     public GameObject AttackPrefab;
 
     public NetCodeConfig NetCodeConfig;
@@ -24,9 +23,9 @@ public class NpcAttackAuthoring : MonoBehaviour
             {
                 FirePointOffset = authoring.FirePointOffset,
                 CooldownTickCount = (uint)(authoring.AttackCooldownTime * authoring.SimulationTickRate),
-                AttackPrefab = GetEntity(authoring.AttackPrefab, TransformUsageFlags.Dynamic)
+                AttackPrefab = GetEntity(authoring.AttackPrefab, TransformUsageFlags.Dynamic),
             });
-            
+
             AddComponent<NpcTargetEntity>(entity);
             AddBuffer<NpcAttackCooldown>(entity);
         }

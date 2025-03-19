@@ -23,7 +23,7 @@ public partial struct NpcAttackSystem : ISystem
         {
             CurrentTick = networkTime.ServerTick,
             TransformLookup = SystemAPI.GetComponentLookup<LocalTransform>(true),
-            ECB = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()
+            ECB = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter(),
         }.ScheduleParallel(state.Dependency);
     }
 }
@@ -34,12 +34,11 @@ public partial struct NpcAttackJob : IJobEntity
 {
     [ReadOnly] public NetworkTick CurrentTick;
     [ReadOnly] public ComponentLookup<LocalTransform> TransformLookup;
-
     public EntityCommandBuffer.ParallelWriter ECB;
 
     [BurstCompile]
     private void Execute(ref DynamicBuffer<NpcAttackCooldown> attackCooldown, in NpcAttackProperties attackProperties,
-        in NpcTargetEntity targetEntity, Entity npcEntity, TeamTypes team, [ChunkIndexInQuery] int sortKey)
+        in NpcTargetEntity targetEntity, Entity enemyEntity, TeamTypes team, [ChunkIndexInQuery] int sortKey)
     {
         if (!TransformLookup.HasComponent(targetEntity.Value)) return;
         if (!attackCooldown.GetDataAtTick(CurrentTick, out var cooldownExpirationTick))
@@ -51,12 +50,23 @@ public partial struct NpcAttackJob : IJobEntity
                         CurrentTick.IsNewerThan(cooldownExpirationTick.Value);
         if (!canAttack) return;
 
-        var spawnPosition = TransformLookup[npcEntity].Position + attackProperties.FirePointOffset;
-        var targetPosition = TransformLookup[targetEntity.Value].Position;
-        var targetEntityl = targetEntity.Value;
 
-        var newAttack = ECB.Instantiate(sortKey, attackProperties.AttackPrefab); 
-        var newAttackTransform = LocalTransform.FromPositionRotation(spawnPosition,
+        var enemyTransform = TransformLookup[enemyEntity];
+
+        var spawnPosition = enemyTransform.Position;
+        var targetPosition = TransformLookup[targetEntity.Value].Position;
+
+        // Get the vector from the enemy to the player
+        var direction = math.normalize(targetPosition - spawnPosition);
+        var targetRotation = quaternion.LookRotationSafe(direction, math.up());
+
+        // Rotate the enemy towards player
+        enemyTransform.Rotation = targetRotation;
+
+        ECB.SetComponent(sortKey, enemyEntity, enemyTransform);
+
+        var newAttack = ECB.Instantiate(sortKey, attackProperties.AttackPrefab);
+        var newAttackTransform = LocalTransform.FromPositionRotation(spawnPosition + attackProperties.FirePointOffset,
             quaternion.LookRotationSafe(targetPosition - spawnPosition, math.up()));
 
         ECB.SetComponent(sortKey, newAttack, newAttackTransform);

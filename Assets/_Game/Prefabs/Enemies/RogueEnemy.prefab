@@ -101,8 +101,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   NpcTargetRadius: 15
-  AttackCooldownTime: 0
-  FirePointOffset: {x: 0, y: 2.5, z: 0}
+  AttackCooldownTime: 2
+  FirePointOffset: {x: 0, y: 1.5, z: 0}
+  EnemyRotationSpeed: 20
   AttackPrefab: {fileID: 357967689053387235, guid: 19127a4c1ac11844db4373b9e147918b, type: 3}
   NetCodeConfig: {fileID: 11400000, guid: cd69de227738309429193c9089949c16, type: 2}
 --- !u!114 &7330549200574829686

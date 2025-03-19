@@ -17,6 +17,7 @@ public class FollowPlayer : MonoBehaviour
         transform.rotation = Quaternion.Euler(40, 0, 0);
     }
 
+
     void LateUpdate()
     {
         // If entity hasn't been found yet, try to find it
@@ -40,17 +41,26 @@ public class FollowPlayer : MonoBehaviour
         }
 
         // If entity found, update camera position
-        if (entityFound && entityManager.Exists(targetEntity))
+        if (entityFound)
         {
-            LocalTransform playerTransform = entityManager.GetComponentData<LocalTransform>(targetEntity);
-            float3 playerPosition = playerTransform.Position;
+            if (entityManager.Exists(targetEntity) && entityManager.HasComponent<LocalTransform>(targetEntity))
+            {
+                LocalTransform playerTransform = entityManager.GetComponentData<LocalTransform>(targetEntity);
+                float3 playerPosition = playerTransform.Position;
 
-            // Define smooth damp velocity
-            Vector3 velocity = Vector3.zero;
+                // Define smooth damp velocity
+                Vector3 velocity = Vector3.zero;
 
-            // Use SmoothDamp for a more natural movement transition
-            transform.position = Vector3.SmoothDamp(transform.position, playerPosition + new float3(0, 7, -9),
-                ref velocity, 0.05f);
+                // Use SmoothDamp for a more natural movement transition
+                transform.position = Vector3.SmoothDamp(transform.position, playerPosition + new float3(0, 7, -9),
+                    ref velocity, 0.05f);
+            }
+            else
+            {
+                // Destroy the camera GameObject if the player entity no longer exists
+                Destroy(gameObject);
+            }
+
 
             // Use Slerp for smoother rotation towards player
             // Quaternion targetRotation = Quaternion.LookRotation((Vector3)playerPosition - transform.position);
