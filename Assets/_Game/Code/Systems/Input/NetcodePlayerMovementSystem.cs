@@ -21,8 +21,6 @@ partial struct NetcodePlayerMovementSystem : ISystem
                          RefRW<PlayerSprintData>>()
                      .WithAll<Simulate>())
         {
-            Debug.Log("Updating player movement and camera follow");
-
             float3 moveVector = new float3(netcodePlayerInput.ValueRO.inputVector.x, 0,
                 netcodePlayerInput.ValueRO.inputVector.y);
             float moveSpeed = sprintData.ValueRO.isSprinting
