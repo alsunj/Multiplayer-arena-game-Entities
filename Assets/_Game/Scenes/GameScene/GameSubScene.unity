@@ -221,7 +221,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerPrefabGameObject: {fileID: 5874026590232167095, guid: 7ea025f0d02f62a4b8c0db52b410e781, type: 3}
---- !u!1001 &8989695424255217294
+--- !u!1001 &1719764137
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -235,7 +235,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4518211183990774724, guid: 31ddab13d76d526499c2002833a10312, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0
+      value: -18.12
       objectReference: {fileID: 0}
     - target: {fileID: 4518211183990774724, guid: 31ddab13d76d526499c2002833a10312, type: 3}
       propertyPath: m_LocalPosition.y
@@ -284,4 +284,4 @@ SceneRoots:
   m_Roots:
   - {fileID: 285643545}
   - {fileID: 1434796876}
-  - {fileID: 8989695424255217294}
+  - {fileID: 1719764137}
