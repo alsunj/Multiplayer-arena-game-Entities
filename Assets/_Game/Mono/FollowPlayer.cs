@@ -4,6 +4,7 @@ using Unity.Transforms;
 using Unity.Mathematics;
 using Unity.NetCode;
 
+
 public class FollowPlayer : MonoBehaviour
 {
     public int networkId; // Store NetworkId instead of direct entity reference
@@ -16,7 +17,6 @@ public class FollowPlayer : MonoBehaviour
         entityManager = World.DefaultGameObjectInjectionWorld.EntityManager;
         transform.rotation = Quaternion.Euler(40, 0, 0);
     }
-
 
     void LateUpdate()
     {
@@ -60,11 +60,6 @@ public class FollowPlayer : MonoBehaviour
                 // Destroy the camera GameObject if the player entity no longer exists
                 Destroy(gameObject);
             }
-
-
-            // Use Slerp for smoother rotation towards player
-            // Quaternion targetRotation = Quaternion.LookRotation((Vector3)playerPosition - transform.position);
-            // transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 5f);
         }
     }
 }

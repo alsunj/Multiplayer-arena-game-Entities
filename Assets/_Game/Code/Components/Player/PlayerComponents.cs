@@ -30,6 +30,11 @@ public struct PlayerDefenceData : IComponentData
     public float defenceCooldownTimer;
 }
 
+public struct PlayerTag : IComponentData
+{
+}
+
+
 public struct TeamTypes : IComponentData
 {
     [GhostField] public TeamType Value;

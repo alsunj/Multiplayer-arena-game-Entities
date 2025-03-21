@@ -11,8 +11,7 @@ public partial struct DestroyEntitySystem : ISystem
 {
     public void OnCreate(ref SystemState state)
     {
-        // state.RequireForUpdate<RespawnEntityTag>();
-        //     state.RequireForUpdate<MobaPrefabs>();
+        state.RequireForUpdate<RespawnEntityTag>();
         state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
         state.RequireForUpdate<NetworkTime>();
     }
@@ -26,42 +25,47 @@ public partial struct DestroyEntitySystem : ISystem
 
         var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
         var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
+        var entityManager = state.EntityManager;
 
         foreach (var (transform, entity) in SystemAPI.Query<RefRW<LocalTransform>>()
                      .WithAll<DestroyEntityTag, Simulate>().WithEntityAccess())
         {
             if (state.World.IsServer())
             {
-                // if (SystemAPI.HasComponent<GameOverOnDestroyTag>(entity))
-                // {
-                //     var gameOverPrefab = SystemAPI.GetSingleton<MobaPrefabs>().GameOverEntity;
-                //     var gameOverEntity = ecb.Instantiate(gameOverPrefab);
-                //
-                //     var losing = SystemAPI.GetComponent<MobaTeam>(entity).Value;
-                //     var winning = losing == TeamType.Blue ? TeamType.Red : TeamType.Blue;
-                //     Debug.Log($"{winning.ToString()} Team Won!!");
-                //
-                //     ecb.SetComponent(gameOverEntity, new WinningTeam { Value = winning });
-                // }
+                if (SystemAPI.HasComponent<PlayerTag>(entity))
+                {
+                    var networkEntity = SystemAPI.GetComponent<NetworkEntityReference>(entity).Value;
 
-                // if (SystemAPI.HasComponent<ChampTag>(entity))
-                // {
-                //     var networkEntity = SystemAPI.GetComponent<NetworkEntityReference>(entity).Value;
-                //     var respawnEntity = SystemAPI.GetSingletonEntity<RespawnEntityTag>();
-                //     var respawnTickCount = SystemAPI.GetComponent<RespawnTickCount>(respawnEntity).Value;
-                //
-                //     var respawnTick = currentTick;
-                //     respawnTick.Add(respawnTickCount);
-                //
-                //     ecb.AppendToBuffer(respawnEntity, new RespawnBufferElement
-                //     {
-                //         NetworkEntity = networkEntity,
-                //         RespawnTick = respawnTick,
-                //         NetworkId = SystemAPI.GetComponent<NetworkId>(networkEntity).Value
-                //     });
-                // }
+                    // Check if networkEntity exists BEFORE accessing its components
+                    if (!entityManager.Exists(networkEntity))
+                    {
+                        Debug.LogWarning(
+                            $"networkEntity {networkEntity.Index}, Version: {networkEntity.Version} does not exist!");
+                        continue; // Skip this player entity if networkEntity is already gone
+                    }
 
-                ecb.DestroyEntity(entity);
+                    var respawnEntity = SystemAPI.GetSingletonEntity<RespawnEntityTag>();
+                    var respawnTickCount = SystemAPI.GetComponent<RespawnTickCount>(respawnEntity).Value;
+
+                    var respawnTick = currentTick;
+                    respawnTick.Add(respawnTickCount);
+
+                    // Store NetworkId BEFORE destroying entity or networkEntity
+                    int networkIdValue = SystemAPI.GetComponent<NetworkId>(networkEntity).Value;
+
+                    ecb.AppendToBuffer(respawnEntity, new RespawnBufferElement
+                    {
+                        NetworkEntity = networkEntity,
+                        RespawnTick = respawnTick,
+                        NetworkId = networkIdValue
+                    });
+
+                    ecb.DestroyEntity(entity);
+                }
+                else
+                {
+                    ecb.DestroyEntity(entity); // Destroy non-player entities
+                }
             }
             else
             {

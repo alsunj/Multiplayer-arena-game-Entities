@@ -17,7 +17,6 @@ public class NetcodePlayerInputAuthoring : MonoBehaviour
         {
             Entity entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent(entity, new NetcodePlayerInput());
-
             AddComponent(entity, new PlayerSprintData
             {
                 isSprinting = false,
@@ -30,8 +29,10 @@ public class NetcodePlayerInputAuthoring : MonoBehaviour
                 sprintCooldownReset = authoring.sprintCooldownReset,
             });
 
+
             AddComponent(entity, new PlayerAttackData());
             AddComponent(entity, new PlayerDefenceData());
-        }
+            AddComponent<PlayerTag>(entity);
+        }  
     }
 }

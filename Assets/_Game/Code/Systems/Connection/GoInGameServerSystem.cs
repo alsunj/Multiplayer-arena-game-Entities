@@ -31,7 +31,9 @@ partial struct GoInGameServerSystem : ISystem
                  SystemAPI.Query
                      <RefRO<ReceiveRpcCommandRequest>>().WithAll<GoInGameRequestRpc>().WithEntityAccess())
         {
-            entityCommandBuffer.AddComponent<NetworkStreamInGame>(receiveRpcCommandRequest.ValueRO.SourceConnection);
+            Entity sourceConnection =
+                receiveRpcCommandRequest.ValueRO.SourceConnection; // Get the source connection entity
+            entityCommandBuffer.AddComponent<NetworkStreamInGame>(sourceConnection);
             Debug.Log("Client Connected to Server");
             entityCommandBuffer.DestroyEntity(entity);
 
@@ -41,15 +43,14 @@ partial struct GoInGameServerSystem : ISystem
             entityCommandBuffer.SetComponent(playerEntity, LocalTransform.FromPosition(new float3(
                 UnityEngine.Random.Range(-10, +10), 0, 0)));
 
-            // Add GhostOwner component to connecting player that sent the connection rpc
-            NetworkId networkId = SystemAPI.GetComponent<NetworkId>(receiveRpcCommandRequest.ValueRO.SourceConnection);
+            NetworkId networkId = SystemAPI.GetComponent<NetworkId>(sourceConnection); // use sourceConnection
             entityCommandBuffer.AddComponent(playerEntity, new GhostOwner
             {
                 NetworkId = networkId.Value
             });
+            entityCommandBuffer.AddComponent(playerEntity, new NetworkEntityReference { Value = sourceConnection });
 
-            // This destroys the player entity if the that client has disconnected
-            entityCommandBuffer.AppendToBuffer(receiveRpcCommandRequest.ValueRO.SourceConnection, new LinkedEntityGroup
+            entityCommandBuffer.AppendToBuffer(sourceConnection, new LinkedEntityGroup // use sourceConnection
             {
                 Value = playerEntity
             });
