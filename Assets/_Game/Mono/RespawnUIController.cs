@@ -2,39 +2,45 @@
 using Unity.Entities;
 using UnityEngine;
 
-namespace TMG.NFE_Tutorial
+
+public class RespawnUIController : MonoBehaviour
 {
-    public class RespawnUIController : MonoBehaviour
+    [SerializeField] private GameObject _respawnPanel;
+    [SerializeField] private TextMeshProUGUI _respawnCountdownText;
+
+    private void OnEnable()
     {
-        [SerializeField] private GameObject _respawnPanel;
-        [SerializeField] private TextMeshProUGUI _respawnCountdownText;
+        _respawnPanel.SetActive(false);
 
-        private void OnEnable() // Use OnEnable for subscribing
+        if (World.DefaultGameObjectInjectionWorld == null) return;
+        var respawnSystem = World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<RespawnPlayerSystem>();
+        if (respawnSystem != null)
         {
-            _respawnPanel.SetActive(false);
-
-            // Subscribe directly to the static events:
-            RespawnPlayerSystem.OnUpdateRespawnCountdown += UpdateRespawnCountdownText;
-            RespawnPlayerSystem.OnRespawn += CloseRespawnPanel;
+            respawnSystem.OnUpdateRespawnCountdown += UpdateRespawnCountdownText;
+            respawnSystem.OnRespawn += CloseRespawnPanel;
         }
+    }
 
-        private void OnDisable()
+    private void OnDisable()
+    {
+        if (World.DefaultGameObjectInjectionWorld == null) return;
+        var respawnSystem = World.DefaultGameObjectInjectionWorld.GetExistingSystemManaged<RespawnPlayerSystem>();
+        if (respawnSystem != null)
         {
-            // Unsubscribe directly from the static events (IMPORTANT):
-            RespawnPlayerSystem.OnUpdateRespawnCountdown -= UpdateRespawnCountdownText;
-            RespawnPlayerSystem.OnRespawn -= CloseRespawnPanel;
+            respawnSystem.OnUpdateRespawnCountdown -= UpdateRespawnCountdownText;
+            respawnSystem.OnRespawn -= CloseRespawnPanel;
         }
+    }
 
-        private void UpdateRespawnCountdownText(int countdownTime)
-        {
-            if (!_respawnPanel.activeSelf) _respawnPanel.SetActive(true);
+    private void UpdateRespawnCountdownText(int countdownTime)
+    {
+        if (!_respawnPanel.activeSelf) _respawnPanel.SetActive(true);
 
-            _respawnCountdownText.text = countdownTime.ToString();
-        }
+        _respawnCountdownText.text = countdownTime.ToString();
+    }
 
-        private void CloseRespawnPanel()
-        {
-            _respawnPanel.SetActive(false);
-        }
+    private void CloseRespawnPanel()
+    {
+        _respawnPanel.SetActive(false);
     }
 }

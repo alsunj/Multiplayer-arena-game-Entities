@@ -77,6 +77,7 @@ public struct DamageOnTriggerJob : ITriggerEventsJob
         }
 
         var damageOnTrigger = DamageOnTriggerLookup[damageDealingEntity];
+        ECB.AddComponent<DestroyEntityTag>(damageDealingEntity);
         ECB.AppendToBuffer(damageReceivingEntity, new DamageBufferElement { Value = damageOnTrigger.Value });
         ECB.AppendToBuffer(damageDealingEntity, new AlreadyDamagedEntity { Value = damageReceivingEntity });
     }

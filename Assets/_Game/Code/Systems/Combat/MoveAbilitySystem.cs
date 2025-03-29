@@ -6,14 +6,26 @@ using Unity.Transforms;
 [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
 public partial struct MoveAbilitySystem : ISystem
 {
-    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         var deltaTime = SystemAPI.Time.DeltaTime;
-        foreach (var (transform, moveSpeed) in SystemAPI.Query<RefRW<LocalTransform>, AbilityMoveSpeed>()
-                     .WithAll<Simulate>())
+
+        state.Dependency = new MoveAbilityJob
         {
-            transform.ValueRW.Position += transform.ValueRW.Forward() * moveSpeed.Value * deltaTime;
-        }
+            DeltaTime = deltaTime
+        }.ScheduleParallel(state.Dependency);
+    }
+}
+
+[BurstCompile]
+[WithNone(typeof(SlimeTag))]
+public partial struct MoveAbilityJob : IJobEntity
+{
+    public float DeltaTime;
+
+    [BurstCompile]
+    private void Execute(ref LocalTransform transform, in AbilityMoveSpeed moveSpeed)
+    {
+        transform.Position += transform.Forward() * moveSpeed.Value * DeltaTime;
     }
 }

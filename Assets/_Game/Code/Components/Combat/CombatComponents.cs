@@ -78,3 +78,7 @@ public struct CurrentHitPoints : IComponentData
 {
     [GhostField] public int Value;
 }
+
+public struct SlimeTag : IComponentData
+{
+}
