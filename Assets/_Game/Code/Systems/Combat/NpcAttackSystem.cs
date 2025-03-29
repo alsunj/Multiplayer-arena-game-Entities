@@ -30,6 +30,7 @@ public partial struct NpcAttackSystem : ISystem
 
 [BurstCompile]
 [WithAll(typeof(Simulate))]
+[WithNone(typeof(SlimeTag))]
 public partial struct NpcAttackJob : IJobEntity
 {
     [ReadOnly] public NetworkTick CurrentTick;

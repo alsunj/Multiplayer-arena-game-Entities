@@ -13,10 +13,7 @@ partial struct GoInGameServerSystem : ISystem
     {
         state.RequireForUpdate<EntititesReferences>();
         state.RequireForUpdate<NetworkId>();
-        // EntityQueryBuilder entityQueryBuilder = new EntityQueryBuilder(Unity.Collections.Allocator.Temp)
-        //     .WithAll<GoInGameRequestRpc>().WithAll<ReceiveRpcCommandRequest>();
-        // state.RequireForUpdate(state.GetEntityQuery(entityQueryBuilder));
-        // entityQueryBuilder.Dispose();
+        state.RequireForUpdate<GoInGameRequestRpc>();
     }
 
     [BurstCompile]

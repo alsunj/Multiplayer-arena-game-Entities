@@ -4,7 +4,6 @@ using Unity.Mathematics;
 using Unity.NetCode;
 using Unity.Physics;
 using Unity.Transforms;
-using UnityEngine;
 
 [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
 partial struct NetcodePlayerMovementSystem : ISystem
@@ -53,14 +52,16 @@ partial struct NetcodePlayerMovementSystem : ISystem
                 }
             }
 
-            // Apply instant movement
-            physicsVelocity.ValueRW.Linear = moveVector * moveSpeed;
+            // Apply smooth movement
+            physicsVelocity.ValueRW.Linear =
+                math.lerp(physicsVelocity.ValueRO.Linear, moveVector * moveSpeed, deltaTime * 10);
 
             // Optionally, update the rotation to face the movement direction
             if (!math.all(moveVector == float3.zero))
             {
                 quaternion targetRotation = quaternion.LookRotationSafe(moveVector, math.up());
-                localTransform.ValueRW.Rotation = math.slerp(localTransform.ValueRO.Rotation, targetRotation, 0.1f);
+                localTransform.ValueRW.Rotation =
+                    math.slerp(localTransform.ValueRO.Rotation, targetRotation, deltaTime * 10);
             }
         }
     }

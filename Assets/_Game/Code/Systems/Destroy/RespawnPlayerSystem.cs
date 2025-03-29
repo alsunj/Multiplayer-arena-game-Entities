@@ -10,8 +10,8 @@ using UnityEngine;
 [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
 public partial class RespawnPlayerSystem : SystemBase
 {
-    public static Action<int> OnUpdateRespawnCountdown;
-    public static Action OnRespawn;
+    public Action<int> OnUpdateRespawnCountdown;
+    public Action OnRespawn;
 
     protected override void OnCreate()
     {
@@ -55,21 +55,21 @@ public partial class RespawnPlayerSystem : SystemBase
                         var newPlayer = ecb.Instantiate(playerPrefab);
 
                         ecb.SetComponent(newPlayer, new GhostOwner { NetworkId = networkId });
-                        // ecb.SetComponent(newPlayer, new ChampMoveTargetPosition
-                        // {
-                        //     Value = playerSpawnInfo.SpawnPosition
-                        // });
-                        ecb.SetComponent(newPlayer, LocalTransform.FromPosition(new float3(
-                            UnityEngine.Random.Range(-10, +10), 0, 0)));
+                        ecb.SetComponent(newPlayer,
+                            LocalTransform.FromPosition(new float3(UnityEngine.Random.Range(-10, +10), 0, 0)));
                         ecb.AppendToBuffer(curRespawn.NetworkEntity, new LinkedEntityGroup { Value = newPlayer });
                         ecb.AddComponent(newPlayer, new NetworkEntityReference { Value = curRespawn.NetworkEntity });
-                        CreateCameraForNewPlayer(networkId); // Call the camera creation function
 
                         respawnsToCleanup.Add(i);
                     }
                     else
                     {
                         OnRespawn?.Invoke();
+                        if (SystemAPI.TryGetSingleton<NetworkId>(out var clientNetworkId) &&
+                            curRespawn.NetworkId == clientNetworkId.Value)
+                        {
+                            CreateCameraForNewPlayer(curRespawn.NetworkId);
+                        }
                     }
                 }
                 else if (!isServer)
@@ -88,7 +88,6 @@ public partial class RespawnPlayerSystem : SystemBase
                 }
             }
 
-
             foreach (var respawnIndex in respawnsToCleanup)
             {
                 respawnBuffer.RemoveAt(respawnIndex);
@@ -103,6 +102,6 @@ public partial class RespawnPlayerSystem : SystemBase
         GameObject playerCameraGO = new GameObject($"Camera{networkId}");
         playerCameraGO.AddComponent<Camera>();
         FollowPlayer followScript = playerCameraGO.AddComponent<FollowPlayer>();
-        followScript.networkId = networkId; // Store networkId for later use (if needed)
+        followScript.networkId = networkId;
     }
 }

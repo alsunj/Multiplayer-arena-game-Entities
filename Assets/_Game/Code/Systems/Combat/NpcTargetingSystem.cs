@@ -57,8 +57,8 @@ public partial struct NpcTargetingSystem : ISystem
 
                 foreach (var hit in hits)
                 {
-                    if (!TeamTypeLookup.TryGetComponent(hit.Entity, out var mobaTeam)) continue;
-                    if (mobaTeam.Value == TeamTypeLookup[npcEntity].Value) continue;
+                    if (!TeamTypeLookup.TryGetComponent(hit.Entity, out var teamTypes)) continue;
+                    if (teamTypes.Value == TeamTypeLookup[npcEntity].Value) continue;
                     if (hit.Distance < closestDistance)
                     {
                         closestDistance = hit.Distance;
