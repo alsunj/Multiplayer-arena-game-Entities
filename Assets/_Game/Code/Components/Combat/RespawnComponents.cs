@@ -1,3 +1,4 @@
+using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
@@ -19,6 +20,15 @@ public struct RespawnTickCount : IComponentData
     public uint Value;
 }
 
+public struct EnemySpawnPoints : IComponentData
+{
+    public NativeArray<float3> SpawnPoints;
+}
+
+public struct EnemySpawnTimer : IComponentData
+{
+    public float SpawnTimer;
+}
 
 public struct NetworkEntityReference : IComponentData
 {

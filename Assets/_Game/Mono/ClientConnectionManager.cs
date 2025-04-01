@@ -112,21 +112,21 @@ public class ClientConnectionManager : MonoBehaviour
                 serverWorld.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>());
             networkDriverQuery.GetSingletonRW<NetworkStreamDriver>().ValueRW.Listen(serverEndpoint);
         }
-        // Create the entity and add components directly.
-        var configEntity = serverWorld.EntityManager.CreateEntity();
-        serverWorld.EntityManager.AddComponentData(configEntity, new GameStartProperties
-        {
-            CountdownTime = _gameStartCountDownTime,
-            PlayerAmount = PlayerAmount,
-            RogueEnemyAmount = RogueEnemyAmount,
-            SlimeEnemyAmount = SlimeEnemyAmount
-        });
-        serverWorld.EntityManager.AddComponentData(configEntity, new SpawnableEnemiesCounter
-        {
-            SlimeEnemyCounter = 0,
-            RogueEnemyCounter = 0
-        });
-        serverWorld.EntityManager.AddComponentData(configEntity, new PlayerCounter { Value = 0 });
+        // // Create the entity and add components directly.
+        // var configEntity = serverWorld.EntityManager.CreateEntity();
+        // serverWorld.EntityManager.AddComponentData(configEntity, new GameStartProperties
+        // {
+        //     CountdownTime = _gameStartCountDownTime,
+        //     PlayerAmount = PlayerAmount,
+        //     RogueEnemyAmount = RogueEnemyAmount,
+        //     SlimeEnemyAmount = SlimeEnemyAmount
+        // });
+        // serverWorld.EntityManager.AddComponentData(configEntity, new SpawnableEnemiesCounter
+        // {
+        //     SlimeEnemyCounter = 0,
+        //     RogueEnemyCounter = 0
+        // });
+        // serverWorld.EntityManager.AddComponentData(configEntity, new PlayerCounter { Value = 0 });
     }
 
     private void StartClient()

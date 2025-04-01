@@ -8,10 +8,9 @@ partial struct ServerStartGameSystem : ISystem
 {
     public void OnCreate(ref SystemState state)
     {
-        state.RequireForUpdate<NetworkTime>();
         state.RequireForUpdate<GameStartProperties>();
         state.RequireForUpdate<EntititesReferences>();
-        state.RequireForUpdate<GamePlayingTag>(); // var builder = new EntityQueryBuilder(Allocator.Temp).WithAll<MobaTeamRequest, ReceiveRpcCommandRequest>();
-        // state.RequireForUpdate(state.GetEntityQuery(builder));
+        state.RequireForUpdate<GamePlayingTag>();
+        state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
     }
 }

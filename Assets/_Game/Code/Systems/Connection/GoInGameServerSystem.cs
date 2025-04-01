@@ -8,7 +8,6 @@ using UnityEngine;
 [WorldSystemFilter(WorldSystemFilterFlags.ServerSimulation)]
 partial struct GoInGameServerSystem : ISystem
 {
-    [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<PlayerCounter>();
@@ -17,27 +16,33 @@ partial struct GoInGameServerSystem : ISystem
         state.RequireForUpdate<GoInGameRequestRpc>();
     }
 
-    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
+        Debug.Log("GoInGameServerSystem: OnUpdate started");
+
         EntityCommandBuffer entityCommandBuffer = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
-
-
         EntititesReferences entititesReferences = SystemAPI.GetSingleton<EntititesReferences>();
         Entity gameStartPropertiesEntity = SystemAPI.GetSingletonEntity<PlayerCounter>();
         PlayerCounter playerCounter = SystemAPI.GetComponent<PlayerCounter>(gameStartPropertiesEntity);
         GameStartProperties gameStartProperties =
             SystemAPI.GetComponent<GameStartProperties>(gameStartPropertiesEntity);
+        Debug.Log(
+            $"GoInGameServerSystem: entititesReferences: {entititesReferences}, gameStartPropertiesEntity: {gameStartPropertiesEntity}");
+
         foreach ((
                      RefRO<ReceiveRpcCommandRequest> receiveRpcCommandRequest,
                      Entity entity) in
                  SystemAPI.Query
                      <RefRO<ReceiveRpcCommandRequest>>().WithAll<GoInGameRequestRpc>().WithEntityAccess())
         {
+            //
+            //
+            //
             Entity sourceConnection =
-                receiveRpcCommandRequest.ValueRO.SourceConnection; // Get the source connection entity
+                receiveRpcCommandRequest.ValueRO.SourceConnection; // Get the source connection entity 
+            Debug.Log($"GoInGameServerSystem: sourceConnection: {sourceConnection}");
+
             entityCommandBuffer.AddComponent<NetworkStreamInGame>(sourceConnection);
-            Debug.Log("Client Connected to Server");
             entityCommandBuffer.DestroyEntity(entity);
 
 
@@ -94,7 +99,6 @@ partial struct GoInGameServerSystem : ISystem
         SystemAPI.SetSingleton(playerCounter);
     }
 
-    [BurstCompile]
     public void OnDestroy(ref SystemState state)
     {
     }
