@@ -1,23 +1,41 @@
+using System;
 using Unity.Burst;
+using Unity.Collections;
 using Unity.Entities;
+using Unity.NetCode;
 
-partial struct ClientStartGameSystem : ISystem
+[WorldSystemFilter(WorldSystemFilterFlags.ClientSimulation)]
+public partial class ClientStartGameSystem : SystemBase
 {
-    [BurstCompile]
-    public void OnCreate(ref SystemState state)
-    {
-        
-    }
+    public Action<int> OnUpdatePlayersRemainingToStart;
+    public Action OnStartGameCountdown;
 
-    [BurstCompile]
-    public void OnUpdate(ref SystemState state)
+    protected override void OnUpdate()
     {
-        
-    }
+        var ecb = new EntityCommandBuffer(Allocator.Temp);
 
-    [BurstCompile]
-    public void OnDestroy(ref SystemState state)
-    {
-        
+        foreach (var (playersRemainingToStart, entity) in SystemAPI.Query<PlayersRemainingToStart>()
+                     .WithAll<ReceiveRpcCommandRequest>().WithEntityAccess())
+        {
+            ecb.DestroyEntity(entity);
+            OnUpdatePlayersRemainingToStart?.Invoke(playersRemainingToStart.Value);
+        }
+
+        foreach (var (gameStartTick, entity) in SystemAPI.Query<GameStartTickRpc>()
+                     .WithAll<ReceiveRpcCommandRequest>().WithEntityAccess())
+        {
+            ecb.DestroyEntity(entity);
+            OnStartGameCountdown?.Invoke();
+
+            var gameStartEntity = ecb.CreateEntity();
+
+            //creates the entity about when the game has started on client side
+            ecb.AddComponent(gameStartEntity, new GameStartTick
+            {
+                Value = gameStartTick.Value
+            });
+        }
+
+        ecb.Playback(EntityManager);
     }
 }

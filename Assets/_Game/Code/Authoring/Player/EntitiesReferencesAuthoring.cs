@@ -6,6 +6,9 @@ public class EntitiesReferencesAuthoring : MonoBehaviour
 {
     public GameObject playerPrefabGameObject;
     public GameObject RespawnEntity;
+    public GameObject RougeEnemyGameObject;
+    public GameObject SlimeEnemyGameObject;
+
     public GameObject HealthBarPrefab;
 
     public class Baker : Baker<EntitiesReferencesAuthoring>
@@ -15,7 +18,9 @@ public class EntitiesReferencesAuthoring : MonoBehaviour
             Entity entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent(entity, new EntititesReferences
             {
-                playerPrefabEntity = GetEntity(authoring.playerPrefabGameObject, TransformUsageFlags.Dynamic),
+                PlayerPrefabEntity = GetEntity(authoring.playerPrefabGameObject, TransformUsageFlags.Dynamic),
+                RougeEnemyEntity = GetEntity(authoring.RougeEnemyGameObject, TransformUsageFlags.Dynamic),
+                SlimeEnemyEntity = GetEntity(authoring.SlimeEnemyGameObject, TransformUsageFlags.Dynamic),
                 RespawnEntity = GetEntity(authoring.RespawnEntity, TransformUsageFlags.None)
             });
             AddComponentObject(entity, new UIPrefabs
@@ -31,7 +36,10 @@ public class EntitiesReferencesAuthoring : MonoBehaviour
 
 public struct EntititesReferences : IComponentData
 {
-    public Entity playerPrefabEntity;
+    public Entity PlayerPrefabEntity;
+    public Entity RougeEnemyEntity;
+    public Entity SlimeEnemyEntity;
+
     public Entity RespawnEntity;
 }
 
