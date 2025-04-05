@@ -20,6 +20,9 @@ public class ClientConnectionManager : MonoBehaviour
     [SerializeField] private GameObject SlimeAmountContainer;
     [SerializeField] private Button _connectButton;
     [SerializeField] private int _gameStartCountDownTime;
+    [SerializeField] private float _slimeSpawnCooldownTime;
+    [SerializeField] private float _rogueSpawnCooldownTime;
+
 
     private ushort Port => ushort.Parse(_portField.text);
     private int PlayerAmount => int.Parse(_playerAmountField.text);
@@ -112,21 +115,26 @@ public class ClientConnectionManager : MonoBehaviour
                 serverWorld.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>());
             networkDriverQuery.GetSingletonRW<NetworkStreamDriver>().ValueRW.Listen(serverEndpoint);
         }
-        // Create the entity and add components directly.
-        var configEntity = serverWorld.EntityManager.CreateEntity();
-        serverWorld.EntityManager.AddComponentData(configEntity, new GameStartProperties
+
+        var spawnerEntity = serverWorld.EntityManager.CreateEntity();
+        serverWorld.EntityManager.AddComponentData(spawnerEntity, new GameStartProperties
         {
             CountdownTime = _gameStartCountDownTime,
             PlayerAmount = PlayerAmount,
             RogueEnemyAmount = RogueEnemyAmount,
             SlimeEnemyAmount = SlimeEnemyAmount
         });
-        serverWorld.EntityManager.AddComponentData(configEntity, new SpawnableEnemiesCounter
+        serverWorld.EntityManager.AddComponentData(spawnerEntity, new EnemySpawnTimer
+        {
+            SlimeSpawnCooldown = _slimeSpawnCooldownTime,
+            RogueSpawnCooldown = _rogueSpawnCooldownTime
+        });
+        serverWorld.EntityManager.AddComponentData(spawnerEntity, new SpawnableEnemiesCounter
         {
             SlimeEnemyCounter = 0,
             RogueEnemyCounter = 0
         });
-        serverWorld.EntityManager.AddComponentData(configEntity, new PlayerCounter { Value = 0 });
+        serverWorld.EntityManager.AddComponentData(spawnerEntity, new PlayerCounter { Value = 0 });
     }
 
     private void StartClient()

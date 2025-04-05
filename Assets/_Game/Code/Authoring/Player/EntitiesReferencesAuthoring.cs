@@ -27,8 +27,6 @@ public class EntitiesReferencesAuthoring : MonoBehaviour
             {
                 HealthBar = authoring.HealthBarPrefab,
             });
-            // AddComponent<PhysicsMass>(entity, PhysicsMass.CreateDynamic(MassProperties.UnitSphere, 1f));
-            // AddComponent<PhysicsDamping>(entity, new PhysicsDamping { Linear = 0.01f, Angular = 0.05f });
         }
     }
 }

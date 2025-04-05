@@ -11,7 +11,6 @@ partial struct ServerStartGameSystem : ISystem
         state.RequireForUpdate<NetworkTime>();
         state.RequireForUpdate<GameStartProperties>();
         state.RequireForUpdate<EntititesReferences>();
-        state.RequireForUpdate<GamePlayingTag>(); // var builder = new EntityQueryBuilder(Allocator.Temp).WithAll<MobaTeamRequest, ReceiveRpcCommandRequest>();
-        // state.RequireForUpdate(state.GetEntityQuery(builder));
+        state.RequireForUpdate<GamePlayingTag>();
     }
 }

@@ -11,20 +11,21 @@ partial struct GoInGameServerSystem : ISystem
     [BurstCompile]
     public void OnCreate(ref SystemState state)
     {
+        state.RequireForUpdate<NetworkTime>();
+        state.RequireForUpdate<GameStartProperties>();
         state.RequireForUpdate<PlayerCounter>();
         state.RequireForUpdate<EntititesReferences>();
         state.RequireForUpdate<NetworkId>();
         state.RequireForUpdate<GoInGameRequestRpc>();
     }
 
-    [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
         EntityCommandBuffer entityCommandBuffer = new EntityCommandBuffer(Unity.Collections.Allocator.Temp);
 
 
         EntititesReferences entititesReferences = SystemAPI.GetSingleton<EntititesReferences>();
-        Entity gameStartPropertiesEntity = SystemAPI.GetSingletonEntity<PlayerCounter>();
+        Entity gameStartPropertiesEntity = SystemAPI.GetSingletonEntity<GameStartProperties>();
         PlayerCounter playerCounter = SystemAPI.GetComponent<PlayerCounter>(gameStartPropertiesEntity);
         GameStartProperties gameStartProperties =
             SystemAPI.GetComponent<GameStartProperties>(gameStartPropertiesEntity);
@@ -92,10 +93,5 @@ partial struct GoInGameServerSystem : ISystem
 
         entityCommandBuffer.Playback(state.EntityManager);
         SystemAPI.SetSingleton(playerCounter);
-    }
-
-    [BurstCompile]
-    public void OnDestroy(ref SystemState state)
-    {
     }
 }
