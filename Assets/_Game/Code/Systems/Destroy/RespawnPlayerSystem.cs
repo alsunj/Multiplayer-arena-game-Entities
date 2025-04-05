@@ -49,10 +49,10 @@ public partial class RespawnPlayerSystem : SystemBase
                 {
                     if (isServer)
                     {
-                        var networkId = SystemAPI.GetComponent<NetworkId>(curRespawn.NetworkEntity).Value;
+                        int networkId = SystemAPI.GetComponent<NetworkId>(curRespawn.NetworkEntity).Value;
 
-                        var playerPrefab = SystemAPI.GetSingleton<EntititesReferences>().playerPrefabEntity;
-                        var newPlayer = ecb.Instantiate(playerPrefab);
+                        Entity playerPrefab = SystemAPI.GetSingleton<EntititesReferences>().PlayerPrefabEntity;
+                        Entity newPlayer = ecb.Instantiate(playerPrefab);
 
                         ecb.SetComponent(newPlayer, new GhostOwner { NetworkId = networkId });
                         ecb.SetComponent(newPlayer,

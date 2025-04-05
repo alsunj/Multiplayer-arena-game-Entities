@@ -104,7 +104,7 @@ MonoBehaviour:
   AttackCooldownTime: 2
   FirePointOffset: {x: 0, y: 1.5, z: 0}
   AttackPrefab: {fileID: 357967689053387235, guid: 19127a4c1ac11844db4373b9e147918b, type: 3}
-  NetCodeConfig: {fileID: 11400000, guid: cd69de227738309429193c9089949c16, type: 2}
+  NetCodeConfig: {fileID: 11400000, guid: edda5bd0f33a95e4a98f780e0e3ae9e8, type: 2}
 --- !u!114 &7330549200574829686
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -15,7 +15,14 @@ public class ClientConnectionManager : MonoBehaviour
     [SerializeField] private TMP_InputField _playerAmountField;
     [SerializeField] private TMP_InputField _RogueEnemyAmountField;
     [SerializeField] private TMP_InputField _SlimeEnemyAmountField;
+    [SerializeField] private GameObject LobbyAmountContainer;
+    [SerializeField] private GameObject RangerAmountContainer;
+    [SerializeField] private GameObject SlimeAmountContainer;
     [SerializeField] private Button _connectButton;
+    [SerializeField] private int _gameStartCountDownTime;
+    [SerializeField] private float _slimeSpawnCooldownTime;
+    [SerializeField] private float _rogueSpawnCooldownTime;
+
 
     private ushort Port => ushort.Parse(_portField.text);
     private int PlayerAmount => int.Parse(_playerAmountField.text);
@@ -45,12 +52,15 @@ public class ClientConnectionManager : MonoBehaviour
         {
             case 0:
                 buttonLabel = "Start Host";
+                LobbyAmountContainer.SetActive(true);
+                RangerAmountContainer.SetActive(true);
+                SlimeAmountContainer.SetActive(true);
                 break;
             case 1:
-                buttonLabel = "Start Server";
-                break;
-            case 2:
                 buttonLabel = "Start Client";
+                LobbyAmountContainer.SetActive(false);
+                RangerAmountContainer.SetActive(false);
+                SlimeAmountContainer.SetActive(false);
                 break;
             default:
                 buttonLabel = "<ERROR>";
@@ -61,6 +71,7 @@ public class ClientConnectionManager : MonoBehaviour
         var buttonText = _connectButton.GetComponentInChildren<TextMeshProUGUI>();
         buttonText.text = buttonLabel;
     }
+
 
     private void OnButtonConnect()
     {
@@ -74,9 +85,6 @@ public class ClientConnectionManager : MonoBehaviour
                 StartClient();
                 break;
             case 1:
-                StartServer();
-                break;
-            case 2:
                 StartClient();
                 break;
             default:
@@ -107,14 +115,26 @@ public class ClientConnectionManager : MonoBehaviour
                 serverWorld.EntityManager.CreateEntityQuery(ComponentType.ReadWrite<NetworkStreamDriver>());
             networkDriverQuery.GetSingletonRW<NetworkStreamDriver>().ValueRW.Listen(serverEndpoint);
         }
-        var enemyAmountEntity = serverWorld.EntityManager.CreateEntity();
 
-        serverWorld.EntityManager.AddComponentData(enemyAmountEntity, new EnemyAmountRpc
+        var spawnerEntity = serverWorld.EntityManager.CreateEntity();
+        serverWorld.EntityManager.AddComponentData(spawnerEntity, new GameStartProperties
         {
+            CountdownTime = _gameStartCountDownTime,
             PlayerAmount = PlayerAmount,
             RogueEnemyAmount = RogueEnemyAmount,
             SlimeEnemyAmount = SlimeEnemyAmount
         });
+        serverWorld.EntityManager.AddComponentData(spawnerEntity, new EnemySpawnTimer
+        {
+            SlimeSpawnCooldown = _slimeSpawnCooldownTime,
+            RogueSpawnCooldown = _rogueSpawnCooldownTime
+        });
+        serverWorld.EntityManager.AddComponentData(spawnerEntity, new SpawnableEnemiesCounter
+        {
+            SlimeEnemyCounter = 0,
+            RogueEnemyCounter = 0
+        });
+        serverWorld.EntityManager.AddComponentData(spawnerEntity, new PlayerCounter { Value = 0 });
     }
 
     private void StartClient()

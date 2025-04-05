@@ -1,8 +1,6 @@
 using Unity.Collections;
 using Unity.Entities;
-using Unity.Mathematics;
 using Unity.NetCode;
-using Unity.Transforms;
 using UnityEngine;
 
 
@@ -16,7 +14,6 @@ public partial struct ClientRequestGameEntrySystem : ISystem
             .WithNone<NetworkStreamInGame>();
         state.RequireForUpdate(state.GetEntityQuery(entityQueryBuilder));
         entityQueryBuilder.Dispose();
-        state.RequireForUpdate<ClientConnectionRpc>();
     }
 
     public void OnUpdate(ref SystemState state)
@@ -37,8 +34,8 @@ public partial struct ClientRequestGameEntrySystem : ISystem
             FollowPlayer followScript = playerCameraGO.AddComponent<FollowPlayer>();
             followScript.networkId = networkId.ValueRO.Value; // Store networkId instead of dire
 
-            entityCommandBuffer.AddComponent(requestGameConnection, new GoInGameRequestRpc());
-            entityCommandBuffer.AddComponent(requestGameConnection, new SendRpcCommandRequest());
+            entityCommandBuffer.AddComponent<GoInGameRequestRpc>(requestGameConnection);
+            entityCommandBuffer.AddComponent<SendRpcCommandRequest>(requestGameConnection);
         }
 
         entityCommandBuffer.Playback(state.EntityManager);
@@ -55,7 +52,6 @@ public partial struct ThinClientRequestGameEntrySystem : ISystem
             .WithNone<NetworkStreamInGame>();
         state.RequireForUpdate(state.GetEntityQuery(entityQueryBuilder));
         entityQueryBuilder.Dispose();
-        state.RequireForUpdate<ClientConnectionRpc>();
     }
 
     public void OnUpdate(ref SystemState state)
@@ -72,8 +68,8 @@ public partial struct ThinClientRequestGameEntrySystem : ISystem
 
             var requestGameConnection = entityCommandBuffer.CreateEntity();
 
-            entityCommandBuffer.AddComponent(requestGameConnection, new GoInGameRequestRpc());
-            entityCommandBuffer.AddComponent(requestGameConnection, new SendRpcCommandRequest());
+            entityCommandBuffer.AddComponent<GoInGameRequestRpc>(requestGameConnection);
+            entityCommandBuffer.AddComponent<SendRpcCommandRequest>(requestGameConnection);
         }
 
         entityCommandBuffer.Playback(state.EntityManager);

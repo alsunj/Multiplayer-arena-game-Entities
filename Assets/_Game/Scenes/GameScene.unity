@@ -380,17 +380,9 @@ PrefabInstance:
       propertyPath: m_Name
       value: HUDCanvas
       objectReference: {fileID: 0}
-    - target: {fileID: 1033715538230118892, guid: dc695439125c44a4190bdc008aa5a0fc, type: 3}
-      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
-      value: 1801810542
-      objectReference: {fileID: 0}
-    - target: {fileID: 1796973617372691604, guid: dc695439125c44a4190bdc008aa5a0fc, type: 3}
+    - target: {fileID: 1792365681371560561, guid: dc695439125c44a4190bdc008aa5a0fc, type: 3}
       propertyPath: m_Enabled
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1828345383611332528, guid: dc695439125c44a4190bdc008aa5a0fc, type: 3}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2274541876267278006, guid: dc695439125c44a4190bdc008aa5a0fc, type: 3}
       propertyPath: m_Pivot.x
@@ -472,38 +464,8 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 3459062252518051838, guid: dc695439125c44a4190bdc008aa5a0fc, type: 3}
-      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
-      value: 1801810542
-      objectReference: {fileID: 0}
-    - target: {fileID: 4313165332373534701, guid: dc695439125c44a4190bdc008aa5a0fc, type: 3}
-      propertyPath: 'm_ActiveFontFeatures.Array.data[0]'
-      value: 1801810542
-      objectReference: {fileID: 0}
-    - target: {fileID: 4776685628420966923, guid: dc695439125c44a4190bdc008aa5a0fc, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4973084550295746815, guid: dc695439125c44a4190bdc008aa5a0fc, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 5706297442706245628, guid: dc695439125c44a4190bdc008aa5a0fc, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6766818103523215656, guid: dc695439125c44a4190bdc008aa5a0fc, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8914969948828194284, guid: dc695439125c44a4190bdc008aa5a0fc, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
-    m_RemovedGameObjects:
-    - {fileID: 4776685628420966923, guid: dc695439125c44a4190bdc008aa5a0fc, type: 3}
-    - {fileID: 6766818103523215656, guid: dc695439125c44a4190bdc008aa5a0fc, type: 3}
+    m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dc695439125c44a4190bdc008aa5a0fc, type: 3}
