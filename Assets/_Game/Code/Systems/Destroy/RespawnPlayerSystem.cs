@@ -17,6 +17,7 @@ public partial class RespawnPlayerSystem : SystemBase
     {
         RequireForUpdate<NetworkTime>();
         RequireForUpdate<TeamTypes>();
+        RequireForUpdate<GamePlayingTag>();
     }
 
     protected override void OnStartRunning()

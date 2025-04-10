@@ -150,9 +150,5 @@ public class ClientConnectionManager : MonoBehaviour
         }
 
         World.DefaultGameObjectInjectionWorld = clientWorld;
-
-
-        var ConnectionRequestEntity = clientWorld.EntityManager.CreateEntity();
-        clientWorld.EntityManager.AddComponentData(ConnectionRequestEntity, new ClientConnectionRpc());
     }
 }

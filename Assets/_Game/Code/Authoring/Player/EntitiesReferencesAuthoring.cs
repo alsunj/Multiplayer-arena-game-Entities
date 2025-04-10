@@ -23,10 +23,6 @@ public class EntitiesReferencesAuthoring : MonoBehaviour
                 SlimeEnemyEntity = GetEntity(authoring.SlimeEnemyGameObject, TransformUsageFlags.Dynamic),
                 RespawnEntity = GetEntity(authoring.RespawnEntity, TransformUsageFlags.None)
             });
-            AddComponentObject(entity, new UIPrefabs
-            {
-                HealthBar = authoring.HealthBarPrefab,
-            });
         }
     }
 }
@@ -37,11 +33,5 @@ public struct EntititesReferences : IComponentData
     public Entity PlayerPrefabEntity;
     public Entity RougeEnemyEntity;
     public Entity SlimeEnemyEntity;
-
     public Entity RespawnEntity;
-}
-
-public class UIPrefabs : IComponentData
-{
-    public GameObject HealthBar;
 }

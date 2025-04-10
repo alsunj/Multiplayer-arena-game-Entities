@@ -4,10 +4,6 @@ public struct GoInGameRequestRpc : IRpcCommand
 {
 }
 
-public struct ClientConnectionRpc : IRpcCommand
-{
-}
-
 public struct PlayersRemainingToStart : IRpcCommand
 {
     public int Value;

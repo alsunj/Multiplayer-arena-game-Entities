@@ -32,7 +32,7 @@ public partial struct ClientRequestGameEntrySystem : ISystem
             GameObject playerCameraGO = new GameObject($"Camera{networkId.ValueRO.Value}");
             playerCameraGO.AddComponent<Camera>();
             FollowPlayer followScript = playerCameraGO.AddComponent<FollowPlayer>();
-            followScript.networkId = networkId.ValueRO.Value; // Store networkId instead of dire
+            followScript.networkId = networkId.ValueRO.Value;
 
             entityCommandBuffer.AddComponent<GoInGameRequestRpc>(requestGameConnection);
             entityCommandBuffer.AddComponent<SendRpcCommandRequest>(requestGameConnection);

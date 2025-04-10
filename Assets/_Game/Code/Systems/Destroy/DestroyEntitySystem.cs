@@ -14,6 +14,8 @@ public partial struct DestroyEntitySystem : ISystem
         state.RequireForUpdate<RespawnEntityTag>();
         state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
         state.RequireForUpdate<NetworkTime>();
+        state.RequireForUpdate<GamePlayingTag>();
+        state.RequireForUpdate<DestroyEntityTag>();
     }
 
     public void OnUpdate(ref SystemState state)
@@ -66,10 +68,6 @@ public partial struct DestroyEntitySystem : ISystem
                 {
                     ecb.DestroyEntity(entity); // Destroy non-player entities
                 }
-            }
-            else
-            {
-                transform.ValueRW.Position = new float3(1000f, 1000f, 1000f);
             }
         }
     }

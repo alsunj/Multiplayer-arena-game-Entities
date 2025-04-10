@@ -25,6 +25,7 @@ public class SlimeTargetAuthoring : MonoBehaviour
             });
             AddComponent<NpcTargetEntity>(entity);
             AddComponent<SlimeTag>(entity);
+            AddComponent<SlimeTargetDirection>(entity);
             AddBuffer<NpcAttackCooldown>(entity);
         }
     }

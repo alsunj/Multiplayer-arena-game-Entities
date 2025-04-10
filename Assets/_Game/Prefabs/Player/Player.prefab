@@ -147,11 +147,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a82f6d8766908894faabdee547539756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprintRemaining: 5
-  sprintDuration: 5
-  sprintSpeed: 12
-  walkSpeed: 9
-  sprintCooldownReset: 2
+  sprintRemaining: 8
+  sprintDuration: 8
+  sprintSpeed: 25
+  walkSpeed: 1
+  sprintCooldownReset: 1
 --- !u!114 &3955402020692204287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -320,7 +320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e73c985659b81d408f4e99cb152349d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHitPoints: 20000
+  MaxHitPoints: 500
 --- !u!1001 &6975352639711469968
 PrefabInstance:
   m_ObjectHideFlags: 0

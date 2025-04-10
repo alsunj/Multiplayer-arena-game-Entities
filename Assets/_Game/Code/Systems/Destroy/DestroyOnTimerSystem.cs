@@ -9,6 +9,8 @@ public partial struct DestroyOnTimerSystem : ISystem
     {
         state.RequireForUpdate<NetworkTime>();
         state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
+        state.RequireForUpdate<DestroyAtTick>();
+        state.RequireForUpdate<GamePlayingTag>();
     }
 
     [BurstCompile]
@@ -19,10 +21,10 @@ public partial struct DestroyOnTimerSystem : ISystem
 
         var currentTick = SystemAPI.GetSingleton<NetworkTime>().ServerTick;
 
-        foreach (var (destroyAtTick, entity) in SystemAPI.Query<DestroyAtTick>().WithAll<Simulate>()
+        foreach (var (destroyAtTick, entity) in SystemAPI.Query<RefRW<DestroyAtTick>>().WithAll<Simulate>()
                      .WithNone<DestroyEntityTag>().WithEntityAccess())
         {
-            if (currentTick.Equals(destroyAtTick.Value) || currentTick.IsNewerThan(destroyAtTick.Value))
+            if (currentTick.Equals(destroyAtTick.ValueRW.Value) || currentTick.IsNewerThan(destroyAtTick.ValueRW.Value))
             {
                 ecb.AddComponent<DestroyEntityTag>(entity);
             }

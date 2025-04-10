@@ -6,12 +6,13 @@ using Unity.NetCode;
 using Unity.Transforms;
 
 [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
-public partial struct NpcAttackSystem : ISystem
+public partial struct RogueAttackSystem : ISystem
 {
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<NetworkTime>();
         state.RequireForUpdate<BeginSimulationEntityCommandBufferSystem.Singleton>();
+        state.RequireForUpdate<GamePlayingTag>();
     }
 
     public void OnUpdate(ref SystemState state)

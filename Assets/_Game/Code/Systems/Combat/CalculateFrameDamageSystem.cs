@@ -8,6 +8,8 @@ public partial struct CalculateFrameDamageSystem : ISystem
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<NetworkTime>();
+        state.RequireForUpdate<GamePlayingTag>();
+        state.RequireForUpdate<DamageBufferElement>();
     }
 
     [BurstCompile]

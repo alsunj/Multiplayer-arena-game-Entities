@@ -36,7 +36,7 @@ partial struct EnemySpawnerSystem : ISystem
                 float randomValue = aspect.RandomSpawnOffset;
                 float3 spawnPosition =
                     spawnPoints[slimeSpawnIndex].SpawnPoint + new float3(randomValue, 0, -randomValue);
-                SpawnEnemy(ecb, enemySlimeEntity, spawnPosition); 
+                SpawnEnemy(ecb, enemySlimeEntity, spawnPosition);
                 aspect.IncreaseSlimeCounter();
                 aspect.ResetSlimeTimer();
             }

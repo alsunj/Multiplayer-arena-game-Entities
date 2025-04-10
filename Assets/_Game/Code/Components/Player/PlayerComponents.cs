@@ -20,30 +20,8 @@ public struct PlayerSprintData : IComponentData
     public float sprintCooldownReset;
 }
 
-public struct PlayerAttackData : IComponentData
-{
-    public float attackCooldownTimer;
-}
-
-public struct PlayerDefenceData : IComponentData
-{
-    public float defenceCooldownTimer;
-}
-
 public struct PlayerTag : IComponentData
 {
-}
-
-[GhostComponent(PrefabType = GhostPrefabType.AllPredicted, OwnerSendType = SendToOwnerType.SendToOwner)]
-public struct PlayerCameraBind : IComponentData
-{
-    public int ClientNetworkId;
-}
-
-public struct CameraFollow : IComponentData
-{
-    public Entity PlayerEntity;
-    public float3 Offset;
 }
 
 public struct TeamTypes : IComponentData

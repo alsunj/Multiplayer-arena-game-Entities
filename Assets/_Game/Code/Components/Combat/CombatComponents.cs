@@ -46,7 +46,7 @@ public struct AbilityMoveSpeed : IComponentData
     public float Value;
 }
 
-public struct DamageOnTrigger : IComponentData
+public struct DamageOnCollision : IComponentData
 {
     public int Value;
 }
@@ -81,4 +81,9 @@ public struct CurrentHitPoints : IComponentData
 
 public struct SlimeTag : IComponentData
 {
+}
+
+public struct SlimeTargetDirection : IComponentData
+{
+    public float3 Value;
 }

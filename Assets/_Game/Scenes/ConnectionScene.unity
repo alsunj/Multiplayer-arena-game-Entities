@@ -490,7 +490,7 @@ MonoBehaviour:
   SlimeAmountContainer: {fileID: 7438304585132253661}
   _connectButton: {fileID: 661734915}
   _gameStartCountDownTime: 2
-  _slimeSpawnCooldownTime: 0.3
+  _slimeSpawnCooldownTime: 0.1
   _rogueSpawnCooldownTime: 1
 --- !u!114 &1734898360 stripped
 MonoBehaviour:

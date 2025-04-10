@@ -4,10 +4,21 @@ using Unity.Mathematics;
 using Unity.NetCode;
 using Unity.Physics;
 using Unity.Transforms;
+using UnityEngine;
 
 [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
 partial struct NetcodePlayerMovementSystem : ISystem
 {
+    [BurstCompile]
+    public void OnCreate(ref SystemState state)
+    {
+        state.RequireForUpdate<NetcodePlayerInput>();
+        state.RequireForUpdate<PhysicsVelocity>();
+        state.RequireForUpdate<LocalTransform>();
+        state.RequireForUpdate<PlayerSprintData>();
+        state.RequireForUpdate<GamePlayingTag>();
+    }
+
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
@@ -22,41 +33,37 @@ partial struct NetcodePlayerMovementSystem : ISystem
         {
             float3 moveVector = new float3(netcodePlayerInput.ValueRO.inputVector.x, 0,
                 netcodePlayerInput.ValueRO.inputVector.y);
-            float moveSpeed = sprintData.ValueRO.isSprinting
-                ? sprintData.ValueRO.sprintSpeed
-                : sprintData.ValueRO.walkSpeed;
+            float moveSpeed;
+            if (sprintData.ValueRO.isSprinting)
+                moveSpeed = sprintData.ValueRO.walkSpeed;
+            else
+                moveSpeed = sprintData.ValueRO.sprintSpeed;
 
-            // Update sprinting logic
-            if (sprintData.ValueRO.isSprinting && !sprintData.ValueRO.isSprintCooldown)
+            if (sprintData.ValueRO.isSprinting)
             {
-                sprintData.ValueRW.sprintRemaining -= deltaTime;
-                if (sprintData.ValueRW.sprintRemaining <= 0)
+                if (!sprintData.ValueRO.isSprintCooldown)
                 {
-                    sprintData.ValueRW.isSprinting = false;
-                    sprintData.ValueRW.isSprintCooldown = true;
+                    sprintData.ValueRW.sprintRemaining -= deltaTime;
+                    if (sprintData.ValueRW.sprintRemaining <= 0)
+                    {
+                        sprintData.ValueRW.isSprintCooldown = true;
+                        sprintData.ValueRW.sprintCooldown = sprintData.ValueRO.sprintCooldownReset;
+                    }
                 }
             }
             else
             {
-                sprintData.ValueRW.sprintRemaining = math.clamp(sprintData.ValueRW.sprintRemaining + deltaTime, 0,
-                    sprintData.ValueRO.sprintDuration);
-            }
-
-            if (sprintData.ValueRO.isSprintCooldown)
-            {
-                sprintData.ValueRW.sprintCooldown -= deltaTime;
-                if (sprintData.ValueRW.sprintCooldown <= 0)
+                if (!sprintData.ValueRO.isSprintCooldown)
                 {
-                    sprintData.ValueRW.isSprintCooldown = false;
-                    sprintData.ValueRW.sprintCooldown = sprintData.ValueRO.sprintCooldownReset;
+                    sprintData.ValueRW.sprintRemaining = math.clamp(sprintData.ValueRW.sprintRemaining + deltaTime, 0,
+                        sprintData.ValueRO.sprintDuration);
                 }
             }
 
-            // Apply smooth movement
+
             physicsVelocity.ValueRW.Linear =
                 math.lerp(physicsVelocity.ValueRO.Linear, moveVector * moveSpeed, deltaTime * 10);
 
-            // Optionally, update the rotation to face the movement direction
             if (!math.all(moveVector == float3.zero))
             {
                 quaternion targetRotation = quaternion.LookRotationSafe(moveVector, math.up());

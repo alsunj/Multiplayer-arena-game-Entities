@@ -12,6 +12,7 @@ public partial struct DamageOnCollisionSystem : ISystem
     {
         state.RequireForUpdate<SimulationSingleton>();
         state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
+        state.RequireForUpdate<GamePlayingTag>();
     }
 
     [BurstCompile]
@@ -20,7 +21,7 @@ public partial struct DamageOnCollisionSystem : ISystem
         var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
         var damageOnCollisionJob = new DamageOnCollisionJob
         {
-            DamageOnTriggerLookup = SystemAPI.GetComponentLookup<DamageOnTrigger>(true),
+            DamageOnCollisionLookup = SystemAPI.GetComponentLookup<DamageOnCollision>(true),
             TeamLookup = SystemAPI.GetComponentLookup<TeamTypes>(true),
             AlreadyDamagedLookup = SystemAPI.GetBufferLookup<AlreadyDamagedEntity>(true),
             DamageBufferLookup = SystemAPI.GetBufferLookup<DamageBufferElement>(true),
@@ -34,7 +35,7 @@ public partial struct DamageOnCollisionSystem : ISystem
 
 public struct DamageOnCollisionJob : ICollisionEventsJob
 {
-    [ReadOnly] public ComponentLookup<DamageOnTrigger> DamageOnTriggerLookup;
+    [ReadOnly] public ComponentLookup<DamageOnCollision> DamageOnCollisionLookup;
     [ReadOnly] public ComponentLookup<TeamTypes> TeamLookup;
     public BufferLookup<AlreadyDamagedEntity> AlreadyDamagedLookup;
     public BufferLookup<DamageBufferElement> DamageBufferLookup;
@@ -49,12 +50,12 @@ public struct DamageOnCollisionJob : ICollisionEventsJob
         Entity damageReceivingEntity = Entity.Null;
 
         if (DamageBufferLookup.HasBuffer(entityA) &&
-            DamageOnTriggerLookup.HasComponent(entityB))
+            DamageOnCollisionLookup.HasComponent(entityB))
         {
             damageReceivingEntity = entityA;
             damageDealingEntity = entityB;
         }
-        else if (DamageOnTriggerLookup.HasComponent(entityA) &&
+        else if (DamageOnCollisionLookup.HasComponent(entityA) &&
                  DamageBufferLookup.HasBuffer(entityB))
         {
             damageDealingEntity = entityA;
@@ -84,7 +85,7 @@ public struct DamageOnCollisionJob : ICollisionEventsJob
             if (damageDealingTeam.Value == damageReceivingTeam.Value) return;
         }
 
-        if (DamageOnTriggerLookup.TryGetComponent(damageDealingEntity, out var damageOnTrigger))
+        if (DamageOnCollisionLookup.TryGetComponent(damageDealingEntity, out var damageOnTrigger))
         {
             ECB.AddComponent<DestroyEntityTag>(damageDealingEntity);
             ECB.AppendToBuffer(damageReceivingEntity, new DamageBufferElement { Value = damageOnTrigger.Value });

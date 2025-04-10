@@ -6,6 +6,11 @@ using Unity.Transforms;
 [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
 public partial struct MoveAbilitySystem : ISystem
 {
+    public void OnCreate(ref SystemState state)
+    {
+        state.RequireForUpdate<AbilityMoveSpeed>();
+    }
+
     public void OnUpdate(ref SystemState state)
     {
         var deltaTime = SystemAPI.Time.DeltaTime;

@@ -16,6 +16,7 @@ public partial struct NpcTargetingSystem : ISystem
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<PhysicsWorldSingleton>();
+        state.RequireForUpdate<GamePlayingTag>();
         _npcAttackFilter = new CollisionFilter
         {
             BelongsTo = 1 << 6, //Target Cast
