@@ -7,7 +7,7 @@ public struct RespawnEntityTag : IComponentData
 {
 }
 
-public struct RespawnBufferElement : IBufferElementData
+public struct  RespawnBufferElement : IBufferElementData
 {
     [GhostField] public NetworkTick RespawnTick;
     [GhostField] public Entity NetworkEntity;

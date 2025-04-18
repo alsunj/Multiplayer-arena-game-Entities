@@ -27,7 +27,6 @@ public partial struct DestroyEntitySystem : ISystem
 
         var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
         var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
-        var entityManager = state.EntityManager;
 
         foreach (var (transform, entity) in SystemAPI.Query<RefRW<LocalTransform>>()
                      .WithAll<DestroyEntityTag, Simulate>().WithEntityAccess())
@@ -38,13 +37,6 @@ public partial struct DestroyEntitySystem : ISystem
                 {
                     var networkEntity = SystemAPI.GetComponent<NetworkEntityReference>(entity).Value;
 
-                    // Check if networkEntity exists BEFORE accessing its components
-                    if (!entityManager.Exists(networkEntity))
-                    {
-                        Debug.LogWarning(
-                            $"networkEntity {networkEntity.Index}, Version: {networkEntity.Version} does not exist!");
-                        continue; // Skip this player entity if networkEntity is already gone
-                    }
 
                     var respawnEntity = SystemAPI.GetSingletonEntity<RespawnEntityTag>();
                     var respawnTickCount = SystemAPI.GetComponent<RespawnTickCount>(respawnEntity).Value;

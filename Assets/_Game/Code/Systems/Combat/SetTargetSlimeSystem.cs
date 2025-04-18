@@ -21,14 +21,12 @@ public partial struct SetTargetSlimeSystem : ISystem
     {
         var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
 
-        var teamLookup = SystemAPI.GetComponentLookup<TeamTypes>(true);
         var transformLookup = SystemAPI.GetComponentLookup<LocalTransform>(true);
 
         state.Dependency = new SetSlimeTargetDirectionJob
         {
-            TeamLookup = teamLookup,
             TransformLookup = transformLookup,
-            Ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()
+            ECB = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()
         }.ScheduleParallel(state.Dependency);
     }
 }
@@ -37,32 +35,21 @@ public partial struct SetTargetSlimeSystem : ISystem
 [BurstCompile]
 public partial struct SetSlimeTargetDirectionJob : IJobEntity
 {
-    [ReadOnly] public ComponentLookup<TeamTypes> TeamLookup;
     [ReadOnly] public ComponentLookup<LocalTransform> TransformLookup;
-    public EntityCommandBuffer.ParallelWriter Ecb;
+    public EntityCommandBuffer.ParallelWriter ECB;
 
     [BurstCompile]
-    private void Execute(in LocalTransform transform, in TeamTypes slimeTeam, in NpcTargetEntity targetEntity,
+    private void Execute(in LocalTransform transform, in NpcTargetEntity targetEntity,
         in Entity entity)
     {
-        if (targetEntity.Value == Entity.Null || !TransformLookup.HasComponent(targetEntity.Value) ||
-            !TeamLookup.HasComponent(targetEntity.Value))
+        if (targetEntity.Value == Entity.Null || !TransformLookup.HasComponent(targetEntity.Value))
         {
-            Ecb.RemoveComponent<SlimeTargetDirection>(entity.Index, entity);
+            ECB.RemoveComponent<SlimeTargetDirection>(entity.Index, entity);
             return;
         }
 
-        var targetTeam = TeamLookup[targetEntity.Value].Value;
-
-        if (targetTeam != TeamType.Enemy)
-        {
-            var targetPosition = TransformLookup[targetEntity.Value].Position;
-            var direction = math.normalize(targetPosition - transform.Position);
-            Ecb.AddComponent(entity.Index, entity, new SlimeTargetDirection { Value = direction });
-        }
-        else
-        {
-            Ecb.RemoveComponent<SlimeTargetDirection>(entity.Index, entity);
-        }
+        var targetPosition = TransformLookup[targetEntity.Value].Position;
+        var direction = math.normalize(targetPosition - transform.Position);
+        ECB.AddComponent(entity.Index, entity, new SlimeTargetDirection { Value = direction });
     }
 }

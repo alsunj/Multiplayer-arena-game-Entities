@@ -33,13 +33,10 @@ partial struct NetcodePlayerMovementSystem : ISystem
         {
             float3 moveVector = new float3(netcodePlayerInput.ValueRO.inputVector.x, 0,
                 netcodePlayerInput.ValueRO.inputVector.y);
-            float moveSpeed;
-            if (sprintData.ValueRO.isSprinting)
-                moveSpeed = sprintData.ValueRO.walkSpeed;
-            else
-                moveSpeed = sprintData.ValueRO.sprintSpeed;
 
-            if (sprintData.ValueRO.isSprinting)
+            float moveSpeed = sprintData.ValueRO.walkSpeed;
+
+            if (netcodePlayerInput.ValueRO.isSprinting)
             {
                 if (!sprintData.ValueRO.isSprintCooldown)
                 {
@@ -49,14 +46,19 @@ partial struct NetcodePlayerMovementSystem : ISystem
                         sprintData.ValueRW.isSprintCooldown = true;
                         sprintData.ValueRW.sprintCooldown = sprintData.ValueRO.sprintCooldownReset;
                     }
+                    else
+                    {
+                        moveSpeed = sprintData.ValueRO.sprintSpeed;
+                    }
                 }
             }
-            else
+
+            if (sprintData.ValueRO.isSprintCooldown)
             {
-                if (!sprintData.ValueRO.isSprintCooldown)
+                sprintData.ValueRW.sprintCooldown -= deltaTime;
+                if (sprintData.ValueRW.sprintCooldown <= 0)
                 {
-                    sprintData.ValueRW.sprintRemaining = math.clamp(sprintData.ValueRW.sprintRemaining + deltaTime, 0,
-                        sprintData.ValueRO.sprintDuration);
+                    sprintData.ValueRW.isSprintCooldown = false;
                 }
             }
 

@@ -6,11 +6,11 @@ using UnityEngine;
 public struct NetcodePlayerInput : IInputComponentData
 {
     public float2 inputVector;
+    public bool isSprinting;
 }
 
 public struct PlayerSprintData : IComponentData
 {
-    public bool isSprinting;
     public bool isSprintCooldown;
     public float sprintRemaining;
     public float sprintDuration;

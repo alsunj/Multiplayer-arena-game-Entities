@@ -18,17 +18,16 @@ public partial class NetcodePlayerInputSystem : SystemBase
         RequireForUpdate<NetworkStreamInGame>();
         RequireForUpdate<GamePlayingTag>();
         RequireForUpdate<NetcodePlayerInput>();
-        RequireForUpdate<PlayerSprintData>();
     }
 
     protected override void OnUpdate()
     {
-        foreach ((RefRW<NetcodePlayerInput> netcodePlayerInput, RefRW<PlayerSprintData> playerSprintData)
-                 in SystemAPI.Query<RefRW<NetcodePlayerInput>, RefRW<PlayerSprintData>>()
+        foreach (RefRW<NetcodePlayerInput> netcodePlayerInput in SystemAPI.Query<RefRW<NetcodePlayerInput>>()
                      .WithAll<GhostOwnerIsLocal>())
+
         {
             netcodePlayerInput.ValueRW.inputVector = _inputActions.Player.Move.ReadValue<Vector2>();
-            playerSprintData.ValueRW.isSprinting = true;
+            netcodePlayerInput.ValueRW.isSprinting = _inputActions.Player.Sprint.IsPressed();
         }
     }
 

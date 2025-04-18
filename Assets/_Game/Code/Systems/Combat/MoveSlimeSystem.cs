@@ -4,12 +4,12 @@ using Unity.NetCode;
 using Unity.Transforms;
 
 [UpdateInGroup(typeof(PredictedSimulationSystemGroup))]
+
 public partial struct MoveSlimeSystem : ISystem
 {
     public void OnCreate(ref SystemState state)
     {
         state.RequireForUpdate<NetworkTime>();
-        state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         state.RequireForUpdate<SlimeTargetDirection>();
         state.RequireForUpdate<SlimeTag>();
     }

@@ -147,10 +147,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a82f6d8766908894faabdee547539756, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sprintRemaining: 8
-  sprintDuration: 8
-  sprintSpeed: 25
-  walkSpeed: 1
+  sprintRemaining: 5
+  sprintDuration: 5
+  sprintSpeed: 12
+  walkSpeed: 8
   sprintCooldownReset: 1
 --- !u!114 &3955402020692204287
 MonoBehaviour:
