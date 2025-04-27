@@ -28,3 +28,13 @@ public struct TeamTypes : IComponentData
 {
     [GhostField] public TeamType Value;
 }
+
+public class HealthBarUIReference : ICleanupComponentData
+{
+    public GameObject Value;
+}
+
+public struct HealthBarOffset : IComponentData
+{
+    public float3 Value;
+}

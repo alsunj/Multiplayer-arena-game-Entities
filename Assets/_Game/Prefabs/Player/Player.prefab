@@ -320,7 +320,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8e73c985659b81d408f4e99cb152349d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHitPoints: 500
+  MaxHitPoints: 1000
+  HealthBarOffset: {x: 0, y: 2.5, z: 0}
 --- !u!1001 &6975352639711469968
 PrefabInstance:
   m_ObjectHideFlags: 0

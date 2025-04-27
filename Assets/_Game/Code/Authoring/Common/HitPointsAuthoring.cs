@@ -4,7 +4,7 @@ using UnityEngine;
 public class HitPointsAuthoring : MonoBehaviour
 {
     public int MaxHitPoints;
-    // public Vector3 HealthBarOffset;
+    public Vector3 HealthBarOffset;
 
     public class HitPointsBaker : Baker<HitPointsAuthoring>
     {
@@ -15,7 +15,7 @@ public class HitPointsAuthoring : MonoBehaviour
             AddComponent(entity, new MaxHitPoints { Value = authoring.MaxHitPoints });
             AddBuffer<DamageBufferElement>(entity);
             AddBuffer<DamageThisTick>(entity);
-            //AddComponent(entity, new HealthBarOffset { Value = authoring.HealthBarOffset });0
+            AddComponent(entity, new HealthBarOffset { Value = authoring.HealthBarOffset });
         }
     }
 }

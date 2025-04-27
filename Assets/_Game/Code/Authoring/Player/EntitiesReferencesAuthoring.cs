@@ -15,7 +15,7 @@ public class EntitiesReferencesAuthoring : MonoBehaviour
     {
         public override void Bake(EntitiesReferencesAuthoring authoring)
         {
-            Entity entity = GetEntity(TransformUsageFlags.Dynamic);
+            Entity entity = GetEntity(TransformUsageFlags.None);
             AddComponent(entity, new EntititesReferences
             {
                 PlayerPrefabEntity = GetEntity(authoring.playerPrefabGameObject, TransformUsageFlags.Dynamic),
@@ -23,15 +23,10 @@ public class EntitiesReferencesAuthoring : MonoBehaviour
                 SlimeEnemyEntity = GetEntity(authoring.SlimeEnemyGameObject, TransformUsageFlags.Dynamic),
                 RespawnEntity = GetEntity(authoring.RespawnEntity, TransformUsageFlags.None)
             });
+            AddComponentObject(entity, new UIPrefabs
+            {
+                PlayerHealthUIEntity = authoring.HealthBarPrefab
+            });
         }
     }
-}
-
-
-public struct EntititesReferences : IComponentData
-{
-    public Entity PlayerPrefabEntity;
-    public Entity RougeEnemyEntity;
-    public Entity SlimeEnemyEntity;
-    public Entity RespawnEntity;
 }
