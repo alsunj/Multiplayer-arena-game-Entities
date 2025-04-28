@@ -1,4 +1,3 @@
-Testing:
 # Project Setup and Testing
 
 ## Testing:
