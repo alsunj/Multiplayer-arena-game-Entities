@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
-public class ClientConnectionManager : MonoBehaviour
+public class ConnectionManager : MonoBehaviour
 {
     [SerializeField] private TMP_InputField _addressField;
     [SerializeField] private TMP_InputField _portField;

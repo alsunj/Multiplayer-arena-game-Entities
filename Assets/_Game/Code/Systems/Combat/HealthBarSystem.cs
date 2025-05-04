@@ -11,6 +11,7 @@ public partial struct HealthBarSystem : ISystem
     {
         state.RequireForUpdate<EndSimulationEntityCommandBufferSystem.Singleton>();
         state.RequireForUpdate<UIPrefabs>();
+        state.RequireForUpdate<GamePlayingTag>();
     }
 
     public void OnUpdate(ref SystemState state)
