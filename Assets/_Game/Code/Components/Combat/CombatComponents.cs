@@ -46,7 +46,7 @@ public struct AbilityMoveSpeed : IComponentData
     public float Value;
 }
 
-public struct DamageOnCollision : IComponentData
+public struct DamageOnTrigger : IComponentData
 {
     public int Value;
 }

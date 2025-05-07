@@ -1,16 +1,9 @@
 using Unity.Entities;
-using Unity.NetCode;
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class SlimeTargetAuthoring : MonoBehaviour
 {
     public float NpcTargetRadius;
-    public float AttackCooldownTime;
-
-    public NetCodeConfig NetCodeConfig;
-
-    public int SimulationTickRate => NetCodeConfig.ClientServerTickRate.SimulationTickRate;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public class SlimeTargetBaker : Baker<SlimeTargetAuthoring>
@@ -19,14 +12,9 @@ public class SlimeTargetAuthoring : MonoBehaviour
         {
             Entity entity = GetEntity(TransformUsageFlags.Dynamic);
             AddComponent(entity, new NpcTargetRadius { Value = authoring.NpcTargetRadius });
-            AddComponent(entity, new NpcAttackProperties
-            {
-                CooldownTickCount = (uint)(authoring.AttackCooldownTime * authoring.SimulationTickRate)
-            });
             AddComponent<NpcTargetEntity>(entity);
             AddComponent<SlimeTag>(entity);
             AddComponent<SlimeTargetDirection>(entity);
-            AddBuffer<NpcAttackCooldown>(entity);
         }
     }
 }

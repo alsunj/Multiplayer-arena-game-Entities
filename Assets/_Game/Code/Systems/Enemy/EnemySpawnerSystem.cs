@@ -21,17 +21,20 @@ partial struct EnemySpawnerSystem : ISystem
     public void OnUpdate(ref SystemState state)
     {
         var deltaTime = SystemAPI.Time.DeltaTime;
-        Entity enemyPropertiesEntity = SystemAPI.GetSingletonEntity<EnemySpawnPoints>();
-        DynamicBuffer<EnemySpawnPoints> spawnPoints = SystemAPI.GetBuffer<EnemySpawnPoints>(enemyPropertiesEntity);
-        var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
-        var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
 
-        foreach (var aspect in SystemAPI.Query<EnemySpawnerAspect>())
+
+        foreach (EnemySpawnerAspect aspect in SystemAPI.Query<EnemySpawnerAspect>())
         {
             aspect.DecrementTimers(deltaTime);
             if (aspect.CanEnemySlimeSpawn)
             {
+                Entity enemyPropertiesEntity = SystemAPI.GetSingletonEntity<EnemySpawnPoints>();
+                DynamicBuffer<EnemySpawnPoints> spawnPoints =
+                    SystemAPI.GetBuffer<EnemySpawnPoints>(enemyPropertiesEntity);
+                var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
+                var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
                 Entity enemySlimeEntity = SystemAPI.GetSingleton<EntititesReferences>().SlimeEnemyEntity;
+
                 int slimeSpawnIndex = aspect.SlimeEnemyCounter % spawnPoints.Length;
                 float randomValue = aspect.RandomSpawnOffset;
                 float3 spawnPosition =
@@ -43,7 +46,13 @@ partial struct EnemySpawnerSystem : ISystem
 
             if (aspect.CanEnemyRogueSpawn)
             {
+                Entity enemyPropertiesEntity = SystemAPI.GetSingletonEntity<EnemySpawnPoints>();
+                DynamicBuffer<EnemySpawnPoints> spawnPoints =
+                    SystemAPI.GetBuffer<EnemySpawnPoints>(enemyPropertiesEntity);
+                var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
+                var ecb = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged);
                 Entity enemyRogueEntity = SystemAPI.GetSingleton<EntititesReferences>().RougeEnemyEntity;
+
                 int rogueSpawnIndex = aspect.RogueEnemyCounter % spawnPoints.Length;
                 float randomValue = aspect.RandomSpawnOffset;
                 float3 spawnPosition =

@@ -89,7 +89,7 @@ MonoBehaviour:
     m_Template: {fileID: 0}
     m_CollisionResponse:
       m_Override: 0
-      m_Value: 1
+      m_Value: 3
     m_Friction:
       m_Override: 0
       m_Value:
@@ -298,7 +298,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2de495c310a322143be08aa7819a1a33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DamageOnTrigger: 100
+  DamageOnTrigger: 0
 --- !u!1001 &7309850180045348080
 PrefabInstance:
   m_ObjectHideFlags: 0

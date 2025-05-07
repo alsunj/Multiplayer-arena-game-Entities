@@ -3,11 +3,11 @@ using Unity.Collections;
 using Unity.Entities;
 using Unity.Mathematics;
 using Unity.NetCode;
+using Unity.Physics;
 using Unity.Transforms;
 
 [UpdateInGroup(typeof(PredictedSimulationSystemGroup), OrderLast = true)]
-[UpdateBefore(typeof(MoveSlimeSystem))]
-public partial struct SetTargetSlimeSystem : ISystem
+public partial struct MoveSlimeSystem : ISystem
 {
     public void OnCreate(ref SystemState state)
     {
@@ -19,37 +19,35 @@ public partial struct SetTargetSlimeSystem : ISystem
     [BurstCompile]
     public void OnUpdate(ref SystemState state)
     {
-        var ecbSingleton = SystemAPI.GetSingleton<BeginSimulationEntityCommandBufferSystem.Singleton>();
-
         var transformLookup = SystemAPI.GetComponentLookup<LocalTransform>(true);
 
-        state.Dependency = new SetSlimeTargetDirectionJob
+        state.Dependency = new SlimeMoveDirectJob
         {
-            TransformLookup = transformLookup,
-            ECB = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged).AsParallelWriter()
+            TransformLookup = transformLookup
         }.ScheduleParallel(state.Dependency);
     }
-}
-
-
-[BurstCompile]
-public partial struct SetSlimeTargetDirectionJob : IJobEntity
-{
-    [ReadOnly] public ComponentLookup<LocalTransform> TransformLookup;
-    public EntityCommandBuffer.ParallelWriter ECB;
 
     [BurstCompile]
-    private void Execute(in LocalTransform transform, in NpcTargetEntity targetEntity,
-        in Entity entity)
+    public partial struct SlimeMoveDirectJob : IJobEntity
     {
-        if (targetEntity.Value == Entity.Null || !TransformLookup.HasComponent(targetEntity.Value))
-        {
-            ECB.RemoveComponent<SlimeTargetDirection>(entity.Index, entity);
-            return;
-        }
+        [ReadOnly] public ComponentLookup<LocalTransform> TransformLookup;
 
-        var targetPosition = TransformLookup[targetEntity.Value].Position;
-        var direction = math.normalize(targetPosition - transform.Position);
-        ECB.AddComponent(entity.Index, entity, new SlimeTargetDirection { Value = direction });
+        [BurstCompile]
+        private void Execute(
+            ref PhysicsVelocity velocity,
+            in LocalTransform transform,
+            in AbilityMoveSpeed moveSpeed,
+            in NpcTargetEntity targetEntity)
+        {
+            if (targetEntity.Value == Entity.Null || !TransformLookup.HasComponent(targetEntity.Value))
+            {
+                velocity.Linear = float3.zero;
+                return;
+            }
+
+            var targetPosition = TransformLookup[targetEntity.Value].Position;
+            var direction = math.normalize(targetPosition - transform.Position);
+            velocity.Linear = direction * moveSpeed.Value;
+        }
     }
 }

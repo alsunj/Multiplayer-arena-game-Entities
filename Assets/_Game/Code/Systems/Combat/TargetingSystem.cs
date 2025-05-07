@@ -8,7 +8,7 @@ using Unity.Transforms;
 [UpdateInGroup(typeof(PhysicsSystemGroup))]
 [UpdateAfter(typeof(PhysicsSimulationGroup))]
 [UpdateBefore(typeof(ExportPhysicsWorld))]
-public partial struct NpcTargetingSystem : ISystem
+public partial struct TargetingSystem : ISystem
 {
     private CollisionFilter _npcAttackFilter;
 
@@ -20,7 +20,7 @@ public partial struct NpcTargetingSystem : ISystem
         _npcAttackFilter = new CollisionFilter
         {
             BelongsTo = 1 << 6, //Target Cast
-            CollidesWith = 1 << 1 | 1 << 4 //Player and structures
+            CollidesWith = 1 << 1  //Player
         };
     }
 
@@ -46,7 +46,7 @@ public partial struct NpcTargetingSystem : ISystem
         [ReadOnly] public ComponentLookup<TeamTypes> TeamTypeLookup;
 
         [BurstCompile]
-        private void Execute(Entity npcEntity, ref NpcTargetEntity targetEntity, in LocalTransform transform,
+        private void Execute(Entity enemyEntity, ref NpcTargetEntity targetEntity, in LocalTransform transform,
             in NpcTargetRadius targetRadius)
         {
             var hits = new NativeList<DistanceHit>(Allocator.TempJob);
@@ -59,7 +59,7 @@ public partial struct NpcTargetingSystem : ISystem
                 foreach (var hit in hits)
                 {
                     if (!TeamTypeLookup.TryGetComponent(hit.Entity, out var teamTypes)) continue;
-                    if (teamTypes.Value == TeamTypeLookup[npcEntity].Value) continue;
+                    if (teamTypes.Value == TeamTypeLookup[enemyEntity].Value) continue;
                     if (hit.Distance < closestDistance)
                     {
                         closestDistance = hit.Distance;

@@ -6,7 +6,7 @@ using Unity.Physics.Systems;
 
 [UpdateInGroup(typeof(PhysicsSystemGroup))]
 [UpdateAfter(typeof(PhysicsSimulationGroup))]
-public partial struct DamageOnCollisionSystem : ISystem
+public partial struct DamageOnTriggerSystem : ISystem
 {
     public void OnCreate(ref SystemState state)
     {
@@ -19,43 +19,43 @@ public partial struct DamageOnCollisionSystem : ISystem
     public void OnUpdate(ref SystemState state)
     {
         var ecbSingleton = SystemAPI.GetSingleton<EndSimulationEntityCommandBufferSystem.Singleton>();
-        var damageOnCollisionJob = new DamageOnCollisionJob
+        var damageOnCollisionJob = new DamageOnTriggerJob
         {
-            DamageOnCollisionLookup = SystemAPI.GetComponentLookup<DamageOnCollision>(true),
-            TeamLookup = SystemAPI.GetComponentLookup<TeamTypes>(true),
+            DamageOnTriggerLookup = SystemAPI.GetComponentLookup<DamageOnTrigger>(true),
             AlreadyDamagedLookup = SystemAPI.GetBufferLookup<AlreadyDamagedEntity>(true),
             DamageBufferLookup = SystemAPI.GetBufferLookup<DamageBufferElement>(true),
             ECB = ecbSingleton.CreateCommandBuffer(state.WorldUnmanaged)
         };
 
         var simulationSingleton = SystemAPI.GetSingleton<SimulationSingleton>();
-        damageOnCollisionJob.Schedule(simulationSingleton, state.Dependency).Complete();
+        state.Dependency = damageOnCollisionJob.Schedule(simulationSingleton, state.Dependency);
     }
 }
 
-public struct DamageOnCollisionJob : ICollisionEventsJob
+
+//team lookup is no more necessary as the enemy only collides with player now.
+public struct DamageOnTriggerJob : ITriggerEventsJob
 {
-    [ReadOnly] public ComponentLookup<DamageOnCollision> DamageOnCollisionLookup;
-    [ReadOnly] public ComponentLookup<TeamTypes> TeamLookup;
+    [ReadOnly] public ComponentLookup<DamageOnTrigger> DamageOnTriggerLookup;
     public BufferLookup<AlreadyDamagedEntity> AlreadyDamagedLookup;
     public BufferLookup<DamageBufferElement> DamageBufferLookup;
 
     public EntityCommandBuffer ECB;
 
-    public void Execute(CollisionEvent collisionEvent)
+    public void Execute(TriggerEvent triggerEvent)
     {
-        Entity entityA = collisionEvent.EntityA;
-        Entity entityB = collisionEvent.EntityB;
+        Entity entityA = triggerEvent.EntityA;
+        Entity entityB = triggerEvent.EntityB;
         Entity damageDealingEntity = Entity.Null;
         Entity damageReceivingEntity = Entity.Null;
 
         if (DamageBufferLookup.HasBuffer(entityA) &&
-            DamageOnCollisionLookup.HasComponent(entityB))
+            DamageOnTriggerLookup.HasComponent(entityB))
         {
             damageReceivingEntity = entityA;
             damageDealingEntity = entityB;
         }
-        else if (DamageOnCollisionLookup.HasComponent(entityA) &&
+        else if (DamageOnTriggerLookup.HasComponent(entityA) &&
                  DamageBufferLookup.HasBuffer(entityB))
         {
             damageDealingEntity = entityA;
@@ -79,13 +79,7 @@ public struct DamageOnCollisionJob : ICollisionEventsJob
             ECB.AddBuffer<AlreadyDamagedEntity>(damageDealingEntity);
         }
 
-        if (TeamLookup.TryGetComponent(damageDealingEntity, out var damageDealingTeam) &&
-            TeamLookup.TryGetComponent(damageReceivingEntity, out var damageReceivingTeam))
-        {
-            if (damageDealingTeam.Value == damageReceivingTeam.Value) return;
-        }
-
-        if (DamageOnCollisionLookup.TryGetComponent(damageDealingEntity, out var damageOnTrigger))
+        if (DamageOnTriggerLookup.TryGetComponent(damageDealingEntity, out var damageOnTrigger))
         {
             ECB.AddComponent<DestroyEntityTag>(damageDealingEntity);
             ECB.AppendToBuffer(damageReceivingEntity, new DamageBufferElement { Value = damageOnTrigger.Value });
