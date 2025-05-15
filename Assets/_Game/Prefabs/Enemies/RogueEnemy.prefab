@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8194ce63a01ea9044a8c5a6ebd0e2829, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NpcTargetRadius: 80
+  NpcTargetRadius: 13
   AttackCooldownTime: 2
   FirePointOffset: {x: 0, y: 1.5, z: 0}
   AttackPrefab: {fileID: 357967689053387235, guid: 19127a4c1ac11844db4373b9e147918b, type: 3}

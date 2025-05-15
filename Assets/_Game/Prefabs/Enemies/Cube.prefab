@@ -103,7 +103,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2de495c310a322143be08aa7819a1a33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  DamageOnTrigger: 50
+  DamageOnTrigger: 10
 --- !u!114 &-8527907258641966621
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -129,7 +129,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d8b4a5cfe7236db4dba833c5751c2665, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  NpcTargetRadius: 80
+  NpcTargetRadius: 10
 --- !u!114 &-274669407858188047
 MonoBehaviour:
   m_ObjectHideFlags: 0

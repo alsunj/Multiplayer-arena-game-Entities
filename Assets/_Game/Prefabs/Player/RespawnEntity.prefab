@@ -63,7 +63,7 @@ MonoBehaviour:
   OptimizationMode: 0
   Importance: 10
   MaxSendRate: 0
-  prefabId: 
+  prefabId: b3cdfc2eac1a20f4fa01943b331adf7e
   HasOwner: 0
   SupportAutoCommandTarget: 1
   TrackInterpolationDelay: 0
@@ -84,4 +84,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   RespawnTime: 10
-  NetCodeConfig: {fileID: 11400000, guid: cd69de227738309429193c9089949c16, type: 2}
+  NetCodeConfig: {fileID: 11400000, guid: edda5bd0f33a95e4a98f780e0e3ae9e8, type: 2}
