@@ -2,10 +2,15 @@
 
 ## Testing:
 
-### Locally
+### Locally in Unity Editor
 
 - Run playmode from `ConnectionScene`.
 - Open Virtual players from `Window` -> `MultiPlayer` -> `MultiPlayer Play mode`.
+
+### Test the Build
+
+- Run the windows build from BUILD_entities/Loputoo_entities.exe
+
 
 ### Multiple devices
 
